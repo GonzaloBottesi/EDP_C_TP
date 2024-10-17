@@ -1,6 +1,10 @@
+
+
 class Telefono():
     
     def __init__(self, nombre, modelo) -> None:
+        
+        self.listaApps = []
         
         #self.id
         self.nombre = nombre
@@ -13,6 +17,7 @@ class Telefono():
         self.encendido = False
         self.bloqueado = True
         self.pin = None
+        self.aplicacionActual = None
         
         return None
         
@@ -40,14 +45,6 @@ class Telefono():
         else:
             print("El telefono esta apagado")    
     
-        
-               
-class Aplicacion():
-    def __init__(self, peso) -> None:
-        self.encendido = False
-        self.peso = peso
-        
-
 class Apple():
     def __init__(self,nroiphone) -> None:
         self.nroiphone=nroiphone
