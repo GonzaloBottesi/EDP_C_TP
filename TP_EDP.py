@@ -50,6 +50,11 @@ class Aplicacion():
         self.encendido = False
         self.peso = peso
         
+
+class Apple():
+    def __init__(self,nroiphone) -> None:
+        self.nroiphone=nroiphone
+        
         
 tel1 = Telefono("Gonzalo","Samsung S22")
 
