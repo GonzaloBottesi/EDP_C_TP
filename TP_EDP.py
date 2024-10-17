@@ -16,11 +16,8 @@ class Telefono():
         
         return None
         
-    def powerButton(self):
-        if self.encendido:
-            self.encendido = False
-        else:
-            self.encendido = True
+    def powerButton(self):       
+        self.encendido = not self.encendido
     
     def setPassword(self, password):
         self.pin = password
