@@ -16,7 +16,7 @@ class Central():
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)
                 for telefono in lector_csv:
-                    telefonos[telefono[0]]=[telefono[0],telefono[1],telefono[2],telefono[3],
+                    telefonos[telefono[0]]=Telefono[telefono[0],telefono[1],telefono[2],telefono[3],
                                                     telefono[4],telefono[5],telefono[6],telefono[7]]
                 
                     
