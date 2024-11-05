@@ -25,6 +25,7 @@ class Telefono:
     def powerButton(self):
         if self.bloqueado:    
             self.encendido = True
+        print('Se prendio el celular')
     
     def Apagar(self):
         if self.encendido and self.bloqueado:
@@ -32,6 +33,7 @@ class Telefono:
         elif self.encendido and not self.bloqueado:
             self.encendido = False
             self.bloqueado = True 
+        print('Se apago el celular')
         
             
 
@@ -116,7 +118,7 @@ class FabricaDeTelefonos:
                 next(lector_csv)  # Saltar encabezados
                 for telefono in lector_csv:
                     telefonos[telefono[0]] = Telefono(telefono[0], telefono[1], telefono[2], telefono[3],
-                                                       telefono[4], telefono[5], int(telefono[6]), telefono[7])
+                                                       telefono[4], telefono[5], int(telefono[6]), telefono[7]) #ver cuales son ints
                   
             print("Todos los teléfonos han sido registrados desde el archivo CSV.")
             return telefonos

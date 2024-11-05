@@ -19,13 +19,13 @@ class Config(Aplicacion):
         if not isinstance(tel, Telefono):
             raise TypeError ("Clase incorrecta")
         
-        password = input ("Ingrese contraseña actual")
+        password = input ("Ingrese contraseña actual:\n")
         
         if tel.pin != password:
             print ("Contraseña incorrecta")
             return False
         
-        newpassword = input("Ingrese contraseña nueva")
+        newpassword = input("Ingrese contraseña nueva:\n")
         
         if input("Ingrese nuevamente") != newpassword:
             print("Contraseña incorrecta")
@@ -40,7 +40,7 @@ class Config(Aplicacion):
         if not isinstance(tel, Telefono):
             raise TypeError ("Clase incorrecta")
         
-        password = input("ingrese contraseña actual")
+        password = input("Ingrese contraseña actual:\n")
         
         if tel.pin == password:
             newname = input ("Ingrese nombre nuevo")
@@ -53,6 +53,11 @@ class Config(Aplicacion):
     def red(self, tel : Telefono):
         if isinstance(tel, Telefono):
             tel.red = not tel.red
+            if tel.red == True:
+                print('Se activo la red')
+            elif tel.red == False:
+                print('Se desactivo la red')
+                
                
         else:
             raise TypeError ("Clase incorrecta")
@@ -60,16 +65,34 @@ class Config(Aplicacion):
     def datos(self, tel : Telefono):
         if isinstance(tel, Telefono):
             tel.datos = not tel.datos
+            if tel.datos == True:
+                print('Se activaron los datos')
+            elif tel.red == False:
+                print('Se desactivaron los datos')
                
         else:
             raise TypeError ("Clase incorrecta")
-    def menu(self):
-        match input('¿Qué quiere hacer con ?'):
+    def menu(self,tel: Telefono):
+        match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar el nombre del telefono\n2. Cambiar el codigo de desbloqueo\n3. Desactivar red movil\n4. Acivar\Desactivar datos\n5. Salir\n'):
             case '1':
-                pass #COMPLETAR
+                self.setName(tel)
+                self.menu(tel)
             case '2':
-                pass #COMPLETAR
-        
+                self.changePassword(tel)
+                self.menu(tel)
+            case '3':
+                self.red(tel)
+                self.menu(tel)
+            case '4':
+                self.datos(tel)
+                self.menu(tel)
+            case '5':
+                Telefono.menu()
+            case other:
+                print('Esta opcion no esta dispoible')
+                self.menu(self)
+                
+            
 class AppStore (Aplicacion):
     def __init__(self, peso):
         super().__init__(peso)
@@ -142,25 +165,35 @@ class AppStore (Aplicacion):
         else:
             raise TypeError ("Clase Incorrecta")
         
-    def menu(self):
-        match input('¿Qué quiere hacer con la AppStore?'):
+    def menu(self,tel:Telefono):
+        match input('¿Qué quiere hacer con la AppStore?\n1. Descargar una app\n2. Eliminar una app'):
             case '1':
-                pass #COMPLETAR
+                self.installApp(tel)
+                self.menu(tel)
             case '2':
-                pass #COMPLETAR
+                self.uninstallApp(tel)
+                self.menu(tel)
+            case '3':
+                Telefono.menu()
+            case other:
+                print('Esta opcion no esta disponible')
+                self.menu()
         
 class Contactos(Aplicacion):
     def __init__(self, peso):
         super().__init__(peso)
         self.listaContactos = dict() # Acceso mas facil a los contactos, se puede guardar un CSV para cada telefono
+        #leer archivo
         
     
-    def addContact(self, name, number):
-        
+    def addContact(self):
+        name= input('Ingrese el nombre del contacto que quiere agregar:\n')
         if name in self.listaContactos.keys():
             print("Ya existe un contacto con ese nombre")
         
-        if isinstance(name, str) and isinstance(number, int):
+        number=input('Ingrese el numero del contacto que quiere agregar:\n')
+        
+        if isinstance(name, str) and isinstance(number, int): # no habria que verificar que no exista el numero de celular?
             self.listaContactos.update({name : number}) 
         else:
             if isinstance (name, str):
@@ -169,6 +202,7 @@ class Contactos(Aplicacion):
                 raise ValueError("Error al ingresar el numero, ingrese un numero valido")
     
     def deleteContact (self, name):
+        name= input('Ingrese el nombre del contacto que quiere eliminar:\n')
         try:
             self.listaContactos.pop(name)
         except KeyError:
@@ -176,18 +210,31 @@ class Contactos(Aplicacion):
             return 0
     
     def updateContact (self, name, value):
-        
+        name = input('Ingrese el nombre del contacto:\n')
+        value= input('Ingrese el nombre de su valor:\n') #cambiar lo del valor
         if not name in self.listaContactos.keys():
             print ("El contacto no existe")
         else:
             self.listaContactos.update({name : value})
 
-    def menu(self):
-        match input('¿Qué quiere hacer con la aplicacion Contactos?'):
+    def menu(self, tel :Telefono): #porque en contactos no hace falta saber que telefono usas?
+        match input('¿Qué quiere hacer con la aplicacion Contactos?\n1. Agregar contactos\n2. Borrar contactos\n3. Actualizar contactos\n4. Salir '):
             case '1':
-                pass #COMPLETAR
+                self.addContact()
+                self.menu()
             case '2':
-                pass #COMPLETAR
+                self.deleteContact()
+                self.menu()
+            case '3':
+                self.updateContact() # que seria update contactos?? 
+                self.menu()
+            case '4':
+                # actualizar los contactos (ver si es lo mismo que update)
+                Telefono.menu()
+            case other:
+                print('Esta opcion no esta dispoible')
+                self.menu()
+                
 
 
 
