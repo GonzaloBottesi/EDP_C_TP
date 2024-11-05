@@ -1,4 +1,5 @@
 import csv
+from Aplicacion import *
 
 class Telefono:
     
@@ -24,14 +25,15 @@ class Telefono:
     def powerButton(self):
         if self.bloqueado:    
             self.encendido = True
-        else:
-            print('Su celular ya está prendido\n')
     
     def Apagar(self):
-        if self.encendido:
+        if self.encendido and self.bloqueado:
             self.encendido = False
-        else:
-            print('Su celular está apagado ')
+        elif self.encendido and not self.bloqueado:
+            self.encendido = False
+            self.bloqueado = True 
+        
+            
 
     def unlock(self, password=None):
         if self.encendido:
@@ -53,37 +55,38 @@ class Telefono:
         print(f"Red móvil: {red_estado}, Datos móviles: {datos_estado}")
 
     def menu(self):
-        # Cambiar `self.telefono_en_uso` para usar la instancia correcta
-        self.powerButton()
+        self.powerButton() # Al entrar al menu se prende solo el celular
         
-        if self.encendido and self.bloqueado:
+        if self.encendido and self.bloqueado: # Si el celular esta bloqueado
             match input('¿Qué quiere hacer con el celular?\n1. Desbloquear\n2. Apagar '):
                 case '1':
                     self.unlock()
                     self.menu()
                 case '2':
                     self.Apagar()
-                    return  # Salir del menú
+                    FabricaDeTelefonos.menu_de_telefonos()
                 case other:
                     print('Esta opción no está disponible')
                     self.menu()
 
-        elif self.encendido and not self.bloqueado:
-            match input('''¿Qué aplicación quiere utilizar?\n1. Llamadas\n2. Contactos\n3. Mensaje de texto\n4. Email\n5. App store\n6. Configuración\n7. Apagar'''):
+        elif self.encendido and not self.bloqueado: # Si el celular esta desbloqueado
+            match input('''¿Qué aplicación quiere utilizar?\n1. Llamadas\n2. Contactos\n3. Mensaje de texto\n4. Mail\n5. App store\n6. Configuración\n7. Apagar'''):
                 case '1':
+                    #Llamadas.menu() todavia no creado
                     pass
                 case '2':
-                    pass
+                    Contactos.menu()
                 case '3':
+                    #Sms.menu() todavia no creado
                     pass
                 case '4':
-                    pass
+                    Mail.menu()
                 case '5':
-                    pass
+                    AppStore.menu()
                 case '6':
-                    pass
+                    Config.menu()
                 case '7':
-                    return  # Salir del menú
+                    self.Apagar()
                 case other:
                     print('Esa opción no está disponible en este momento')
                     self.menu()

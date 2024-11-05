@@ -63,6 +63,12 @@ class Config(Aplicacion):
                
         else:
             raise TypeError ("Clase incorrecta")
+    def menu(self):
+        match input('¿Qué quiere hacer con ?'):
+            case '1':
+                pass #COMPLETAR
+            case '2':
+                pass #COMPLETAR
         
 class AppStore (Aplicacion):
     def __init__(self, peso):
@@ -79,7 +85,7 @@ class AppStore (Aplicacion):
         
         """
         
-        pass
+        pass #COMPLET
     
         
     def installApp (self, tel : Telefono, nombre):
@@ -136,6 +142,13 @@ class AppStore (Aplicacion):
         else:
             raise TypeError ("Clase Incorrecta")
         
+    def menu(self):
+        match input('¿Qué quiere hacer con la AppStore?'):
+            case '1':
+                pass #COMPLETAR
+            case '2':
+                pass #COMPLETAR
+        
 class Contactos(Aplicacion):
     def __init__(self, peso):
         super().__init__(peso)
@@ -169,6 +182,12 @@ class Contactos(Aplicacion):
         else:
             self.listaContactos.update({name : value})
 
+    def menu(self):
+        match input('¿Qué quiere hacer con la aplicacion Contactos?'):
+            case '1':
+                pass #COMPLETAR
+            case '2':
+                pass #COMPLETAR
 
 
 
@@ -198,6 +217,12 @@ class Mail(Aplicacion):
             leido = "Leido" if m['leido'] else "No leido"
             print(f"Asunto: {m['asunto']}, Fecha: {m['fecha']}, Estado: {leido}")
 
-
+    def menu(self):
+        match input('¿Qué quiere hacer con su Mail?'):
+            case '1':
+                pass #COMPLETAR
+            case '2':
+                pass #COMPLETAR
+        
     
             
