@@ -24,6 +24,9 @@ class Aplicacion:
         # Arreglo temporal, posiblemente se altere el csv
         if tamanio_formateado == 'Varies with device':
             tamanio_formateado = '0 K'
+            
+        if isinstance(tamanio_formateado, int):
+           return int(float(tamanio_formateado))
         
         # Quitar espacios, convertir a mayúsculas, y eliminar la letra "B" si existe
         tamanio_formateado = tamanio_formateado.replace(" ", "").upper().replace("B", "")

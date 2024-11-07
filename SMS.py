@@ -1,17 +1,18 @@
 from Aplicacion import Aplicacion
-from Stack import Stack
-from TP_EDP import Telefono
 import datetime
 
 class SMS (Aplicacion):
     def __init__(self, peso) -> None:
         super().__init__(peso)
-        self.bandeja = Stack()
+        self.bandeja = dict()
         
-    def sendMessage(self, tel : Telefono):
+    def sendMessage(self, telNumber : str):
         
         """Arma el paquete de datos que envia a la central
 
+        Args:
+            telNumber: numero del telefono emisor
+        
         Returns:
             Packet: _Paquete de datos con orden ['SMS', Nro. Origen, Nro. Destino, Fecha y hora, Mensaje, Nombre (Si esta en contactos) / APODO]_
         """        
@@ -19,7 +20,7 @@ class SMS (Aplicacion):
         destiny = input('Ingrese el numero del destinatario: ')
         message = input('Ingrese el mensaje:')
         
-        packet = ['SMS',tel.numero , destiny, 'Fecha y hora' , message]
+        packet = ['SMS',telNumber , destiny, 'Fecha y hora' , message]
         
         return packet
     
@@ -55,21 +56,33 @@ class SMS (Aplicacion):
             header = packet[5] + ',' + packet[3]
         else:
             header = packet[1] + ',' + packet[3]
-        message = packet
+        message = packet[4]
         
-        filteredPacket = (header,message)
+
         
-        self.bandeja.push(filteredPacket)
+        self.bandeja.update({header : message})
         
     def viewMessage(self):
         
             #Mostrar todos los mensajes de la bandeja, preferentemente paginada
             #Elegir un mensaje
             #Dentro del mensaje, dar la opcion de borrar
-            
+        
+        for header in self.bandeja:
+            print(f'{number}. {header}: {self.bandeja[header]}')
+        return None
+        
+        ##Revisar codigo
+        
+        
+        
+        
+        
+        
+        
         # Configuración para paginación
         page_size = 5  # Cantidad de mensajes por página
-        total_messages = len(self.bandeja.items)
+        total_messages = len(self.bandeja.items())
         
         if total_messages == 0:
             print("La bandeja de entrada está vacía.")
@@ -146,3 +159,11 @@ class SMS (Aplicacion):
                 pass #COMPLETAR
             case '2':
                 pass #COMPLETAR
+
+
+testnumber = '1159369841'
+
+test = SMS('0k')
+message = test.sendMessage(testnumber)
+test.receiveMessage(message)
+test.viewMessage()

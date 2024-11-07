@@ -1,6 +1,6 @@
 import csv
 import Config
-import Parametros
+from Parametros import ConfigParameters
 import Aplicacion
 import Appstore
 import Mail
@@ -19,7 +19,7 @@ class Telefono:
         self.os = os
         self.ram = ram
 
-        self.configParameters = Parametros(nombre, pin = None, datos = False, red = True, 
+        self.configParameters = ConfigParameters(nombre, password = '', datos = False, red = True, 
                                            almacenamiento = self.tamanio_a_bytes(almacenamiento), version = version)
         
         self.numero = numero    
@@ -91,8 +91,8 @@ class Telefono:
     
     
     def mostrar_estado(self):
-        red_estado = "activa" if self.red else "desactivada"
-        datos_estado = "activados" if self.datos else "desactivados"
+        red_estado = "activa" if self.configParameters.red else "desactivada"
+        datos_estado = "activados" if self.configParameters.datos else "desactivados"
         print(f"Red móvil: {red_estado}, Datos móviles: {datos_estado}")
 
     def menu(self):

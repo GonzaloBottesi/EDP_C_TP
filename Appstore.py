@@ -89,20 +89,20 @@ class AppStore (Aplicacion):
                 print ('Posee un OS mas antiguo que el minimo')
                 return None
             
-            tel.listaApps.update({nombre : Aplicacion(peso)})
+            telAppList.update({nombre : Aplicacion(peso)})
             tel.almacenamiento -= peso
             
         else:
             print("No existe esa aplicacion en la tienda")
 
         
-    def uninstallApp (self, tel : ConfigParameters, nombre):
+    def uninstallApp (self, tel : ConfigParameters,telAppList : dict ,nombre):
         
         if isinstance(tel, ConfigParameters):
-            if nombre in tel.listaApps.keys():
-                app : Aplicacion = tel.listaApps.get(nombre)
+            if nombre in telAppList.keys():
+                app : Aplicacion = telAppList.get(nombre)
                 tel.almacenamiento += app.peso
-                tel.listaApps.pop(nombre)
+                telAppList.pop(nombre)
             else:
                 print("Aplicacion no instalada")
      
@@ -152,11 +152,16 @@ class AppStore (Aplicacion):
         if ver1[0] < ver2[0]:
             return False
         
-        if ver1[1] < ver2[1]:
-            return False
+        elif (ver1[0] == ver2[0]):
+            
+            if (ver1[1] < ver2[1]):
+                return False
+            
+            elif (ver1[1] == ver2[1]):
+                
+                if ver1[2] < ver2[2]:
+                    return False
         
-        if ver1[2] < ver2[2]:
-            return False
             
         return True
         
@@ -168,3 +173,15 @@ class AppStore (Aplicacion):
                 pass #COMPLETAR
             case '2':
                 pass #COMPLETAR
+
+
+data = ConfigParameters('Gonzalo Bottesi','379791',True,True,10000000000000,'3.0.0')
+sampledict = dict()
+
+test = AppStore('0 K')
+
+sampledict.update({"Appstore" : test})
+
+test.installApp(data,sampledict,"Paper flowers instructions")
+test.installApp(data,sampledict,'Sketch - Draw & Paint')
+test.uninstallApp(data,sampledict,"Paper flowers instructions")

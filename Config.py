@@ -20,7 +20,7 @@ class Config(Aplicacion):
         
         password = input ("Ingrese contraseña actual")
         
-        if self.telefono.pin != password:
+        if tel.pin != password:
             print ("Contraseña incorrecta")
             return False
         
@@ -34,7 +34,7 @@ class Config(Aplicacion):
         return True
         
         
-    def setName (self, tel):
+    def setName (self, tel : ConfigParameters):
         
         
         if not isinstance(tel, ConfigParameters):
@@ -50,7 +50,7 @@ class Config(Aplicacion):
             print("Contraseña incorrecta")
             return False
         
-    def red(self, tel):
+    def red(self, tel : ConfigParameters):
         
         if isinstance(tel, ConfigParameters):
             tel.red = not tel.red
@@ -67,17 +67,3 @@ class Config(Aplicacion):
         else:
             raise TypeError ("Clase incorrecta")
 
-    def menu(self,tel):
-        match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar red movil\n4. Desactivar red movil\n5. Activar datos\n6. Desactivar datos\n'):
-            case '1':
-                self.setName(tel)
-            case '2':
-                self.changePassword(tel)
-            case '3':
-                self.red() # diferencia entre 3 y 4
-            case '4':
-                self.red()# diferenciar entre 3 y 4
-            case '5':
-                self.datos() # diferenciar entre 5 y 6
-            case '6':
-                self.datos() # diferenciar entre 5 y 6
