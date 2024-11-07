@@ -58,17 +58,17 @@ class Central():
             return False
     
     def verificar_acceso_internet(self, numero):
-            if numero in self.telefonos:
-                dispositivo = self.telefonos[numero]
-                if dispositivo.encendido and dispositivo.datos:
-                    print(f"El telefono con numero {numero} tiene acceso a internet.")
-                    return True
-                else:
-                    print(f"El telefono con numero {numero} no tiene acceso a internet.")
-                    return False
+        if numero in self.telefonos:
+            dispositivo = self.telefonos[numero]
+            if dispositivo.encendido and dispositivo.datos:
+                print(f"El telefono con numero {numero} tiene acceso a internet.")
+                return True
             else:
-                print(f"El telefono con numero {numero} no esta registrado.")
+                print(f"El telefono con numero {numero} no tiene acceso a internet.")
                 return False
+        else:
+            print(f"El telefono con numero {numero} no esta registrado.")
+            return False
 
     def registrar_comunicacion(self, tipo, numero_origen, numero_destino, contenido=None):
         log = {
@@ -123,5 +123,3 @@ class Nodo():
     def __init__(self, dato):
         self.dato = dato
         self.siguiente = None
-
-telefono1=Telefono()

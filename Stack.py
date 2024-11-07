@@ -29,6 +29,15 @@ class Stack:
             
         return size
     
+    def __str__(self) -> str:
+        i = self.topValue
+        print (i.value)
+        while i.next != None:
+            i = i.next
+            print(i.value)
+            
+        return 'Fin'
+            
 
 class Nodo:
     def __init__(self, value) -> None:

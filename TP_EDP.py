@@ -1,7 +1,7 @@
 import csv
 import Config
 import Aplicacion
-import AppStore
+import Appstore
 import Mail
 import Contactos
 
@@ -40,8 +40,9 @@ class Telefono:
             self.encendido = False
             self.bloqueado = True 
         
+    def lock(self):
+        self.bloqueado = True
             
-
     def unlock(self, password=None):
         
         """
@@ -64,6 +65,19 @@ class Telefono:
                     print("Contraseña incorrecta")
         else:
             print("El teléfono está apagado")    
+    
+    def openApp(self):
+        
+        nameList = self.listaApps.keys()
+        
+        print()
+        
+        for app in nameList:
+            i = 1
+            print(f'{i}. {app}')
+        
+        return None
+    
     
     def mostrar_estado(self):
         red_estado = "activa" if self.red else "desactivada"
