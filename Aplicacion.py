@@ -1,7 +1,4 @@
 #Clase aplicacion y derivados
-import csv
-##from TP_EDP import Telefono
-
 
 class Aplicacion:
     def __init__(self, peso : int) -> None: # Peso en bytes 
@@ -44,3 +41,6 @@ class Aplicacion:
 
         # Si no hay sufijo (es decir, el valor está en bytes), convertir directamente
         return int(float(tamanio_formateado))
+
+
+########## Metodo tambien esta en TP_EDP (en la clase telefono)

@@ -1,29 +1,32 @@
 import csv
 import Config
+import Parametros
 import Aplicacion
 import Appstore
 import Mail
 import Contactos
 
+
 class Telefono:
     
     def __init__(self, id, nombre, modelo, os, version, ram, almacenamiento: int, numero) -> None:
+        
         self.listaApps = dict()
+        
         self.id = id
         self.nombre = nombre
         self.modelo = modelo
         self.os = os
-        self.version = version
         self.ram = ram
-        self.almacenamiento = almacenamiento
-        self.numero = numero
+
+        self.configParameters = Parametros(nombre, pin = None, datos = False, red = True, 
+                                           almacenamiento = self.tamanio_a_bytes(almacenamiento), version = version)
         
+        self.numero = numero    
         self.encendido = False
         self.bloqueado = True
-        self.pin = None
+        
         self.aplicacionActual = None
-        self.red = False
-        self.datos = False
         self.ocupado = False
 
     def powerButton(self):
@@ -34,11 +37,9 @@ class Telefono:
             self.encendido = True
     
     def Apagar(self):
-        if self.encendido and self.bloqueado:
+        if self.encendido :
             self.encendido = False
-        elif self.encendido and not self.bloqueado:
-            self.encendido = False
-            self.bloqueado = True 
+            print('Se apago el Telefono')
         
     def lock(self):
         self.bloqueado = True
@@ -104,6 +105,7 @@ class Telefono:
                     self.menu()
                 case '2':
                     self.Apagar()
+                    self.lock()
                     FabricaDeTelefonos.menu_de_telefonos()
                 case other:
                     print('Esta opción no está disponible')
@@ -127,6 +129,7 @@ class Telefono:
                     Config.menu()
                 case '7':
                     self.Apagar()
+                    self.lock()
                 case other:
                     print('Esa opción no está disponible en este momento')
                     self.menu()
@@ -168,7 +171,7 @@ class FabricaDeTelefonos:
         self.crear_archivo_no_existe('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
         self.telefonos = self.extraer_archivo('telefonos.csv')
 
-    def crear_archivo_no_existe(self, archivo, filas_iniciales):
+    def crear_archivo_no_existe(self, archivo, filas_iniciales): # ESTA EN FUNCIONES AUXILIARES
         try:
             with open(archivo, 'x', encoding='utf-8', newline='') as arch:
                 escritor = csv.writer(arch)
@@ -177,7 +180,7 @@ class FabricaDeTelefonos:
         except FileExistsError:
             return
   
-    def extraer_archivo(self, archivo_csv):
+    def extraer_archivo(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
         telefonos = dict()
         try:
             with open(archivo_csv, mode='r', newline='') as archivo:
@@ -228,7 +231,7 @@ class FabricaDeTelefonos:
         else:
             print('No hay telefonos creados ')
     
-    def actualizar_archivos(self):
+    def actualizar_archivos(self): # ESTA EN FUNCIONES AUXILIARES
         with open('telefonos.csv', 'w', encoding='utf-8', newline='') as archivo:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados

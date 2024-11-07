@@ -1,6 +1,7 @@
 import csv
 from Aplicacion import Aplicacion
-from TP_EDP import Telefono
+from Parametros import ConfigParameters
+# from TP_EDP import Telefono
 
 class AppStore (Aplicacion):
     def __init__(self, peso):
@@ -45,39 +46,38 @@ class AppStore (Aplicacion):
         
     
         
-    def installApp (self, tel : Telefono, nombre):
+    def installApp (self, tel : ConfigParameters, telAppList : dict, nombre):
         
         """
         Instala la aplicacion dado el nombre
         
         Args:
-            tel: Instancia de Telefono donde instalar la app
+            tel: Instancia de ConfigParameters del telefono
             nombre: Nombre de la aplicación
-            listaApps: Lista con todas las aplicaciones descargables, junto con 
-            su respectivo peso en bytes
+            telAppList: Diccionario del telefono donde instalar la app
             
         Notes:
-            Cuidado con la instancia de Telefono que se pasa, asi se evita
+            Cuidado con las instancias que se pasan, asi se evita
             instalar en un telefono incorrecto
          """
         
         
-        if not isinstance(tel, Telefono):       #Busca si se paso una clase incorrecta
+        if not isinstance(tel, ConfigParameters):       #Busca si se paso una clase incorrecta
             raise TypeError("Clase Incorrecta")
         
         if not tel.datos:                       #Se fija que este conectado a internet
             print("No hay conexion a internet")
             return None
         
-        if nombre in tel.listaApps.keys():      #Evita que se instale una aplicacion ya instalada
+        if nombre in telAppList.keys():      #Evita que se instale una aplicacion ya instalada
             print("Aplicacion ya instalada")
             return None
             
-        elif nombre in self.listaAppsDisponibles:
+        elif nombre in self.listaAppsDisponibles[0]:
             
             i = 0
             while self.listaAppsDisponibles[0][i] != nombre:
-                i += 1 
+                i += 1
             peso = self.listaAppsDisponibles[1][i]
             version = self.listaAppsDisponibles[2][i]
             
@@ -96,9 +96,9 @@ class AppStore (Aplicacion):
             print("No existe esa aplicacion en la tienda")
 
         
-    def uninstallApp (self, tel : Telefono, nombre):
+    def uninstallApp (self, tel : ConfigParameters, nombre):
         
-        if isinstance(tel, Telefono):
+        if isinstance(tel, ConfigParameters):
             if nombre in tel.listaApps.keys():
                 app : Aplicacion = tel.listaApps.get(nombre)
                 tel.almacenamiento += app.peso

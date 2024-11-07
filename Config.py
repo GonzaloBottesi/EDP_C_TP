@@ -1,4 +1,6 @@
 from Aplicacion import Aplicacion
+from Parametros import ConfigParameters
+
 #Estoy importando Telefono a cada metodo para evitar un import circular
 
 class Config(Aplicacion):
@@ -10,16 +12,15 @@ class Config(Aplicacion):
     def __init__(self, peso):
         super().__init__(peso)
     
-    def changePassword(self, tel): ##Hay que pasarle el telefono sobre el que esta actuando
+    def changePassword(self, tel : ConfigParameters): ##Hay que pasarle el telefono sobre el que esta actuando
         
-        from TP_EDP import Telefono
         
-        if not isinstance(tel, Telefono):
+        if not isinstance(tel, ConfigParameters):
             raise TypeError ("Clase incorrecta")
         
         password = input ("Ingrese contraseña actual")
         
-        if tel.pin != password:
+        if self.telefono.pin != password:
             print ("Contraseña incorrecta")
             return False
         
@@ -35,9 +36,8 @@ class Config(Aplicacion):
         
     def setName (self, tel):
         
-        from TP_EDP import Telefono
         
-        if not isinstance(tel, Telefono):
+        if not isinstance(tel, ConfigParameters):
             raise TypeError ("Clase incorrecta")
         
         password = input("ingrese contraseña actual")
@@ -51,27 +51,33 @@ class Config(Aplicacion):
             return False
         
     def red(self, tel):
-        from TP_EDP import Telefono
         
-        if isinstance(tel, Telefono):
+        if isinstance(tel, ConfigParameters):
             tel.red = not tel.red
 
         else:
             raise TypeError ("Clase incorrecta")
 
-    def datos(self, tel):
+    def datos(self, tel : ConfigParameters):
 
-        from TP_EDP import Telefono
 
-        if isinstance(tel, Telefono):
+        if isinstance(tel, ConfigParameters):
             tel.datos = not tel.datos
 
         else:
             raise TypeError ("Clase incorrecta")
 
-    def menu(self):
-        match input('¿Qué quiere hacer con ?'):
+    def menu(self,tel):
+        match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar red movil\n4. Desactivar red movil\n5. Activar datos\n6. Desactivar datos\n'):
             case '1':
-                pass #COMPLETAR
+                self.setName(tel)
             case '2':
-                pass #COMPLETAR
+                self.changePassword(tel)
+            case '3':
+                self.red() # diferencia entre 3 y 4
+            case '4':
+                self.red()# diferenciar entre 3 y 4
+            case '5':
+                self.datos() # diferenciar entre 5 y 6
+            case '6':
+                self.datos() # diferenciar entre 5 y 6

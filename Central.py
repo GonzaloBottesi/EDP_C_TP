@@ -1,5 +1,7 @@
 import csv
 from TP_EDP import Telefono
+from LLamadas import Llamadas
+
 
 class Central():
     
@@ -70,6 +72,30 @@ class Central():
             print(f"El telefono con numero {numero} no esta registrado.")
             return False
 
+    def realizar_llamada(self, numero_origen, numero_destino):
+        """Inicia la llamada verificando la disponibilidad de ambos teléfonos."""
+        if numero_origen in self.telefonos and numero_destino in self.telefonos:
+            telefono_origen = self.telefonos[numero_origen]
+            telefono_destino = self.telefonos[numero_destino]
+            
+            # Verificar si ambos teléfonos están disponibles para la llamada
+            if self.verificar_disponibilidad_de_red(numero_origen) and self.verificar_disponibilidad_de_red(numero_destino):
+                if telefono_destino.ocupado:
+                    print(f"No se puede realizar la llamada. El número {numero_destino} está ocupado.")
+                else:
+                    # Crear una instancia de Llamadas y gestionar el inicio y final de la llamada
+                    llamada = Llamadas(telefono_origen, telefono_destino, peso=5000)  # Peso en bytes como ejemplo
+                    llamada.onOff()  # Abrir la aplicación de llamadas
+                    
+                    if llamada.iniciar():
+                        llamada.registrar(self)  # Registrar la llamada en la central
+                        llamada.finalizar()      # Finalizar la llamada después de registrar
+                    llamada.onOff()  # Cerrar la aplicación de llamadas
+            else:
+                print("Uno o ambos teléfonos no están disponibles para la llamada.")
+        else:
+            print(f"El teléfono con número {numero_destino} no está registrado en la central.")
+
     def registrar_comunicacion(self, tipo, numero_origen, numero_destino, contenido=None):
         log = {
             'tipo': tipo,
@@ -78,34 +104,7 @@ class Central():
             'contenido': contenido
         }
         self.registro_comunicaciones.append(log)
-        print(f"Comunicacion registrada: {log}")
-
-    def terminar_llamada(self, telefono_origen, telefono_destino):
-        print(f"Llamada finalizada entre {telefono_origen.numero_telefonico} y {telefono_destino.numero_telefonico}.")
-        telefono_origen.ocupado = False
-        telefono_destino.ocupado = False
-
-    def realizar_llamada(self, numero_origen, numero_destino):
-        if numero_destino in self.telefonos:
-            telefono_destino = self.telefonos[numero_destino]
-            
-            if telefono_destino.encendido and telefono_destino.red:
-                if telefono_destino.ocupado:
-                    print(f"No se puede realizar la llamada. El numero {numero_destino} esta ocupado.")
-                else:
-                    telefono_origen = self.telefonos[numero_origen]
-                    telefono_origen.ocupado = True
-                    telefono_destino.ocupado = True
-                    
-                    print(f"Estableciendo llamada de {numero_origen} a {numero_destino}...")
-
-                    self.registrar_comunicacion("llamada", numero_origen, numero_destino)
-
-                    self.terminar_llamada(telefono_origen, telefono_destino)
-            else:
-                print(f"El telefono con numero {numero_destino} no esta disponible.")
-        else:
-            print(f"El telefono con numero {numero_destino} no esta registrado.")
+        print(f"Comunicación registrada: {log}")
 
 
 
