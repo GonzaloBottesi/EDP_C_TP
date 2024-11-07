@@ -25,6 +25,17 @@ class SMS (Aplicacion):
     
     def receiveMessage (self, packet):
         
+        """Recibe el mensaje y lo coloca en la bandeja de entrada
+
+        Raises:
+            TypeError: Salta si el paquete no es una lista
+            ValueError: Salta si el paquete no cumple con los datos minimos o alguno de los datos no es de tipo str
+            
+
+        Returns:
+            False: En caso de que el paquete no sea un mensaje SMS
+        """        
+        
         if not isinstance(packet, list):
             raise TypeError ("Error en el tipo del paquete")
         
@@ -40,7 +51,7 @@ class SMS (Aplicacion):
                 raise ValueError(f"Error en el dato {i} del paquete")
             
         
-        if len(packet) == 6:
+        if len(packet) == 6: ##Tiene un apodo / esta en contactos
             header = packet[5] + ',' + packet[3]
         else:
             header = packet[1] + ',' + packet[3]
@@ -50,7 +61,7 @@ class SMS (Aplicacion):
         
         self.bandeja.push(filteredPacket)
         
-    def viewMessage():
+    def viewMessage(self):
         
         #Mostrar todos los mensajes de la bandeja, preferentemente paginada
         #Elegir un mensaje

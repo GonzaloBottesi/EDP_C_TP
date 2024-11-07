@@ -68,15 +68,25 @@ class Telefono:
     
     def openApp(self):
         
+        """Abre la aplicacion y le asigna a self.aplicacionActual el puntero a la aplicacion abierta
+
+        Returns:
+            type: Clase de la aplicacion abierta, si es descargada de la Appstore, tiene la clase Aplicacion
+        """        
+        
         nameList = self.listaApps.keys()
         
-        print()
+        print('Elija la aplicacion \n')
         
         for app in nameList:
             i = 1
             print(f'{i}. {app}')
+            
+        selectedApp = input('')
+            
         
-        return None
+        
+        return type(self.listaApps.get(selectedApp))
     
     
     def mostrar_estado(self):
