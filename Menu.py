@@ -5,6 +5,6 @@ from Central import Central
 central = Central()
 
 
-telefonoUsandose = central.listatelefonos[x]
+## telefonoUsandose = central.listatelefonos[x]
 
 
