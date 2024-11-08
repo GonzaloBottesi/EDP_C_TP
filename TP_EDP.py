@@ -177,11 +177,12 @@ class FabricaDeTelefonos:
         nombre = input('Ingrese el nombre de su teléfono: ')
         modelo = input('Ingrese el modelo de su teléfono: ')
         os = input('Ingrese el sistema operativo: ')
+        version=input('Ingrese la version: ')
         ram = input('Ingrese la RAM: ')
         almacenamiento = input('Ingrese el tamaño de almacenamiento: ')
         while not almacenamiento.isdigit():
             almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
-        telefono = Telefono(id, nombre, modelo, os, None, ram, int(almacenamiento), None)  # Asigna None o un valor a `numero`
+        telefono = Telefono(id, nombre, modelo, os, version, ram, int(almacenamiento), None)  # Asigna None o un valor a `numero`
         self.telefonos[id] = telefono
 
     def eliminar_telefono(self):
@@ -210,24 +211,6 @@ class FabricaDeTelefonos:
                 escritor.writerow([telefono.id, telefono.nombre, telefono.modelo, telefono.os,
                                    telefono.version, telefono.ram, telefono.almacenamiento, telefono.numero])
     
-    def menu_de_telefonos(self):
-        match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
-            case '1':
-                self.crear_telefono()
-                self.menu_de_telefonos()  # Volver al menú
-            case '2':
-                self.eliminar_telefono()
-                self.menu_de_telefonos()  # Volver al menú
-            case '3':
-                telefono = self.elegir_telefono()
-                telefono.menu()  # Llamar al método de menú del teléfono elegido
-                self.menu_de_telefonos()  # Volver al menú
-            case '4':
-                print('Salir')
-                self.actualizar_archivos()
-            case other:
-                print('Esta opción no está disponible en este momento')
-                self.menu_de_telefonos()
 
 
 # Crear una instancia de FabricaDeTelefonos y llamar al menú

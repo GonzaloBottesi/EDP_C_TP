@@ -1,6 +1,7 @@
 import csv
+
 #cambiar algunas cosas de los archivos auxiliares
-def crear_archivo_no_existe(archivo, filas_iniciales):
+def crear_archivo_no_existe(archivo, filas_iniciales): # funcion que crea UN archivo EN CASO DE QUE NO EXISTA
         try:
             with open(archivo, 'x', encoding='utf-8', newline='') as arch:
                 escritor = csv.writer(arch)
@@ -8,7 +9,8 @@ def crear_archivo_no_existe(archivo, filas_iniciales):
                 return 
         except FileExistsError:
             return
-  
+
+
 def extraer_archivo(archivo_csv):
     telefonos = dict()
     try:
