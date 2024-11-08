@@ -71,7 +71,7 @@ class Telefono:
     def openApp(self):
         
         """Abre la aplicacion y le asigna a self.aplicacionActual el puntero a la aplicacion abierta
-
+            Para usar una aplicacion, usar el atributo aplicacionActual y ckequear que la clase sea la que necesiten
         Returns:
             type: Clase de la aplicacion abierta, si es descargada de la Appstore, tiene la clase Aplicacion
         """        

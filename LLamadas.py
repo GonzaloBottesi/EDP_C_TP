@@ -8,7 +8,6 @@ import datetime
 ##Toda la logistica de quien esta ocupado se tiene que encargar la central, ya que tiene la lista de telefonos conectados a la misma
 ## por eso, en caso de que un telefono este ocupado, le podria llegar al remitente un mensaje de la central indicandole que el destinatario esta ocupado
 ## Leer la parte de la comunicacion del TP. La dinamica es algo asi:
-
 ##              Tel1 solicita llamada con tel2 
 #               central confirma que tel2 esta libre, si no esta le avisa a tel1
 #               central le manda la llamada a tel2
@@ -16,6 +15,8 @@ import datetime
 #               la central le informa a tel1 de la respuesta de tel2 [Conecta la llamada / Termina]
 
 ## Cualquier cosa mandenme un mensaje al grupo y lo explico de vuelta, perdon por el testamento pero me parecio necesario
+
+
 
 # class Llamadas(Aplicacion):
     
