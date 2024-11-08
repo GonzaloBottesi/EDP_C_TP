@@ -41,14 +41,7 @@ class Telefono:
     def Apagar(self):
         if self.encendido :
             self.encendido = False
-<<<<<<< HEAD
-        elif self.encendido and not self.bloqueado:
-            self.encendido = False
-            self.bloqueado = True 
-        print('Se apago el celular')
-=======
             print('Se apago el Telefono')
->>>>>>> fb521e65bcb0d8341f148f4af333a51684d9dcdd
         
     def lock(self):
         self.bloqueado = True
