@@ -18,15 +18,15 @@ class Config(Aplicacion):
         if not isinstance(tel, ConfigParameters):
             raise TypeError ("Clase incorrecta")
         
-        password = input ("Ingrese contraseña actual")
+        password = input ("Ingrese contraseña actual: ")
         
         if tel.pin != password:
             print ("Contraseña incorrecta")
             return False
         
-        newpassword = input("Ingrese contraseña nueva")
+        newpassword = input("Ingrese contraseña nueva: ")
         
-        if input("Ingrese nuevamente") != newpassword:
+        if input("Ingrese nuevamente: ") != newpassword:
             print("Contraseña incorrecta")
             return False
         
@@ -40,10 +40,10 @@ class Config(Aplicacion):
         if not isinstance(tel, ConfigParameters):
             raise TypeError ("Clase incorrecta")
         
-        password = input("ingrese contraseña actual")
+        password = input("ingrese contraseña actual: ")
         
         if tel.pin == password:
-            newname = input ("Ingrese nombre nuevo")
+            newname = input ("Ingrese nombre nuevo: ")
             tel.nombre = newname
             return True
         else:

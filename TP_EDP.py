@@ -1,18 +1,19 @@
 import csv
-import Config
+from Config import Config
 from Parametros import ConfigParameters
-import Aplicacion
-import Appstore
-import Mail
-import Contactos
-
+from Aplicacion import Aplicacion
+from Appstore import AppStore
+from Mail import Mail
+from Contactos import Contactos
+from LLamadas import Llamadas
+from SMS import SMS
 
 class Telefono:
     
     def __init__(self, id, nombre, modelo, os, version, ram, almacenamiento: int, numero) -> None:
         
         self.listaApps = dict()
-        
+        self.listaApps.update({"AppStore" : AppStore('0 K'), "Config" : Config('0 K'), "Llamadas" : Llamadas('0 K'), "Mail" : Mail('0 K'), "SMS" : SMS('0 K')})
         self.id = id
         self.nombre = nombre
         self.modelo = modelo
@@ -57,10 +58,10 @@ class Telefono:
         if self.encendido:
             if not self.bloqueado:
                 print("El teléfono ya se encuentra desbloqueado")
-            elif self.pin is None:
+            elif self.configParameters.pin is None:
                 self.bloqueado = False
             else:
-                if self.pin == password:
+                if self.configParameters.pin == password:
                     self.bloqueado = False
                 else:
                     print("Contraseña incorrecta")
@@ -77,15 +78,17 @@ class Telefono:
         
         nameList = self.listaApps.keys()
         
-        print('Elija la aplicacion \n')
+        print('Aplicaciones instaladas: \n')
         
+        i = 1
         for app in nameList:
-            i = 1
             print(f'{i}. {app}')
+            i += 1
             
-        selectedApp = input('')
+        selectedApp = input('Escriba el nombre de la aplicacion')
             
         
+        self.aplicacionActual = self.listaApps.get(selectedApp)
         
         return type(self.listaApps.get(selectedApp))
     

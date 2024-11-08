@@ -3,7 +3,7 @@ from Aplicacion import Aplicacion
 class Contactos(Aplicacion):
     def __init__(self, peso):
         super().__init__(peso)
-        self.listaContactos = dict() # Acceso mas facil a los contactos, se puede guardar un CSV para cada telefono
+        self.listaContactos = dict()
         
     
     def addContact(self, name : str, number : str):

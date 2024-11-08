@@ -26,6 +26,7 @@ class SMS (Aplicacion):
     
     def receiveMessage (self, packet):
         
+        #Falta codear el manejo de un paquete de error
         """Recibe el mensaje y lo coloca en la bandeja de entrada
 
         Raises:
@@ -156,10 +157,3 @@ class SMS (Aplicacion):
                 print("Opción no válida.")
 
             pass
-
-testnumber = '1159369841'
-
-test = SMS('0k')
-message = test.sendMessage(testnumber)
-test.receiveMessage(message)
-test.viewMessage()

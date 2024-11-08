@@ -7,11 +7,11 @@ class Mail(Aplicacion):
         self.mails=[]
     def agregar_mail(self, asunto, fecha, leido=False):
             
-            self.mails.append({
-                'asunto': asunto,
-                'fecha': fecha,
-                'leido': leido
-                })
+        self.mails.append({
+            'asunto': asunto,
+            'fecha': fecha,
+            'leido': leido
+            })
 
     def obtener_mail(self,criterio='no leidos'):
         if criterio=='no leido':
