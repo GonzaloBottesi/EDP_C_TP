@@ -1,14 +1,13 @@
 #Clase aplicacion y derivados
-from TP_EDP import Telefono
-import csv
 
 class Aplicacion:
     def __init__(self, peso : int) -> None: # Peso en bytes 
         self.abierto = False
-        self.peso = peso
+        self.peso = self.tamanio_a_bytes(peso)
 
     def onOff (self):
         self.abierto = not self.abierto
+<<<<<<< HEAD
     
 class Config(Aplicacion):
     def __init__(self, peso):
@@ -115,42 +114,33 @@ class AppStore (Aplicacion):
         
         """
         Instala la aplicacion dado el nombre
+=======
+>>>>>>> fb521e65bcb0d8341f148f4af333a51684d9dcdd
         
-        Args:
-            tel: Instancia de Telefono donde instalar la app
-            nombre: Nombre de la aplicación
-            listaApps: Lista con todas las aplicaciones descargables, junto con 
-            su respectivo peso en bytes
-            
-        Notes:
-            Cuidado con la instancia de Telefono que se pasa, asi se evita
-            instalar en un telefono incorrecto
-         """
-        
-        
-        if not isinstance(tel, Telefono):       #Busca si se paso una clase incorrecta
-            raise TypeError("Clase Incorrecta")
-        
-        if not tel.datos:                       #Se fija que este conectado a internet
-            print("No hay conexion a internet")
-        
-        if nombre in tel.listaApps.keys():      #Evita que se instale una aplicacion ya instalada
-            print("Aplicacion ya instalada")
-            
-        elif nombre in self.listaAppsDisponibles:
-            
-            i = 0
-            while self.listaAppsDisponibles[i] != nombre:
-                i +=1 
-            peso = None #
-            if tel.almacenamiento <= peso :
-                tel.listaApps.update({nombre : Aplicacion(peso)})
-                tel.almacenamiento -= peso
-            else:
-                print("Espacio insuficiente")
-        else:
-            print("No existe esa aplicacion en la tienda")
+    @staticmethod
+    def tamanio_a_bytes(tamanio_formateado):
+        """Convierte una cadena de tamaño formateado (ej. "117.74 MB") a su valor en bytes.
 
+        Args:
+            tamanio_formateado (str): Tamaño en formato de cadena con sufijo (ej. "1.5 GB").
+
+        Returns:
+            int: El tamaño convertido a bytes.
+
+        Raises:
+            ValueError: Si el formato de entrada no es válido.
+        """
+        # Arreglo temporal, posiblemente se altere el csv
+        if tamanio_formateado == 'Varies with device':
+            tamanio_formateado = '0 K'
+            
+        if isinstance(tamanio_formateado, int):
+           return int(float(tamanio_formateado))
+        
+        # Quitar espacios, convertir a mayúsculas, y eliminar la letra "B" si existe
+        tamanio_formateado = tamanio_formateado.replace(" ", "").upper().replace("B", "")
+
+<<<<<<< HEAD
         
     def uninstallApp (self, tel : Telefono, nombre):
         
@@ -235,41 +225,21 @@ class Contactos(Aplicacion):
                 print('Esta opcion no esta dispoible')
                 self.menu()
                 
+=======
+        # Diccionario de sufijos y su potencia de 1024 correspondiente
+        sufijos = {"K": 1, "M": 2, "G": 3, "T": 4, "P": 5}
+
+        # Recorrer el diccionario para encontrar el sufijo que coincida al final de la cadena
+        for sufijo, potencia in sufijos.items():
+            if tamanio_formateado.endswith(sufijo):
+                # Extraer la parte numérica y convertirla a float
+                valor = float(tamanio_formateado[:-len(sufijo)])
+                # Calcular el tamaño en bytes usando la potencia de 1024
+                return int(valor * (1024 ** potencia))
+
+        # Si no hay sufijo (es decir, el valor está en bytes), convertir directamente
+        return int(float(tamanio_formateado))
+>>>>>>> fb521e65bcb0d8341f148f4af333a51684d9dcdd
 
 
-
-class Mail(Aplicacion):
-    
-    def __init__(self, peso):
-        super().__init__(peso)
-        self.mails=[]
-    def agregar_mail(self, asunto, fecha, leido=False):
-            
-            self.mails.append({
-                'asunto': asunto,
-                'fecha': fecha,
-                'leido': leido
-                })
-
-    def obtener_mail(self,criterio='no leidos'):
-        if criterio=='no leido':
-            mails_ordenados= sorted(self.mails, key=lambda x: (x['leido'], x['fecha']),reverse=True)
-        
-        elif criterio == 'fecha':
-            mails_ordenados = sorted(self.mails,key=lambda x: x['fecha'],reverse=True)
-        
-        else:
-            raise ValueError('criterio solo puede ser "no leido" o "fecha"')
-        for m in mails_ordenados:
-            leido = "Leido" if m['leido'] else "No leido"
-            print(f"Asunto: {m['asunto']}, Fecha: {m['fecha']}, Estado: {leido}")
-
-    def menu(self):
-        match input('¿Qué quiere hacer con su Mail?'):
-            case '1':
-                pass #COMPLETAR
-            case '2':
-                pass #COMPLETAR
-        
-    
-            
+########## Metodo tambien esta en TP_EDP (en la clase telefono)

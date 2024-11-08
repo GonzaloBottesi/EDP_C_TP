@@ -1,107 +1,148 @@
 import csv
-from Aplicacion import *
+from Config import Config
+from Parametros import ConfigParameters
+from Aplicacion import Aplicacion
+from Appstore import AppStore
+from Mail import Mail
+from Contactos import Contactos
+from LLamadas import Llamadas
+from SMS import SMS
 
 class Telefono:
     
     def __init__(self, id, nombre, modelo, os, version, ram, almacenamiento: int, numero) -> None:
+        
         self.listaApps = dict()
+        self.listaApps.update({"AppStore" : AppStore('0 K'), "Config" : Config('0 K'), "Llamadas" : Llamadas('0 K'), "Mail" : Mail('0 K'), "SMS" : SMS('0 K')})
         self.id = id
         self.nombre = nombre
         self.modelo = modelo
         self.os = os
-        self.version = version
         self.ram = ram
-        self.almacenamiento = almacenamiento
-        self.numero = numero
+
+        self.configParameters = ConfigParameters(nombre, password = '', datos = False, red = True, 
+                                           almacenamiento = self.tamanio_a_bytes(almacenamiento), version = version)
         
+        self.numero = numero    
         self.encendido = False
         self.bloqueado = True
-        self.pin = None
+        
         self.aplicacionActual = None
-        self.red = False
-        self.datos = False
         self.ocupado = False
 
     def powerButton(self):
+        """
+        Prende y apaga el telefono
+        """        
         if self.bloqueado:    
             self.encendido = True
         print('Se prendio el celular')
     
     def Apagar(self):
-        if self.encendido and self.bloqueado:
+        if self.encendido :
             self.encendido = False
+<<<<<<< HEAD
         elif self.encendido and not self.bloqueado:
             self.encendido = False
             self.bloqueado = True 
         print('Se apago el celular')
+=======
+            print('Se apago el Telefono')
+>>>>>>> fb521e65bcb0d8341f148f4af333a51684d9dcdd
         
+    def lock(self):
+        self.bloqueado = True
             
-
     def unlock(self, password=None):
+        
+        """
+        Desbloquea el telefono
+        
+        Args:
+            Password: Clave del telefono, valor default None
+        
+        """        
+        
         if self.encendido:
             if not self.bloqueado:
                 print("El teléfono ya se encuentra desbloqueado")
-            elif self.pin is None:
+            elif self.configParameters.pin is None:
                 self.bloqueado = False
             else:
-                if self.pin == password:
+                if self.configParameters.pin == password:
                     self.bloqueado = False
                 else:
                     print("Contraseña incorrecta")
         else:
             print("El teléfono está apagado")    
     
+    def openApp(self):
+        
+        """Abre la aplicacion y le asigna a self.aplicacionActual el puntero a la aplicacion abierta
+            Para usar una aplicacion, usar el atributo aplicacionActual y ckequear que la clase sea la que necesiten
+        Returns:
+            type: Clase de la aplicacion abierta, si es descargada de la Appstore, tiene la clase Aplicacion
+        """        
+        
+        nameList = self.listaApps.keys()
+        
+        print('Aplicaciones instaladas: \n')
+        
+        i = 1
+        for app in nameList:
+            print(f'{i}. {app}')
+            i += 1
+            
+        selectedApp = input('Escriba el nombre de la aplicacion')
+            
+        
+        self.aplicacionActual = self.listaApps.get(selectedApp)
+        
+        return type(self.listaApps.get(selectedApp))
+    
+    
     def mostrar_estado(self):
-        red_estado = "activa" if self.red else "desactivada"
-        datos_estado = "activados" if self.datos else "desactivados"
+        red_estado = "activa" if self.configParameters.red else "desactivada"
+        datos_estado = "activados" if self.configParameters.datos else "desactivados"
         print(f"Red móvil: {red_estado}, Datos móviles: {datos_estado}")
 
-    def menu(self):
-        self.powerButton() # Al entrar al menu se prende solo el celular
-        
-        if self.encendido and self.bloqueado: # Si el celular esta bloqueado
-            match input('¿Qué quiere hacer con el celular?\n1. Desbloquear\n2. Apagar '):
-                case '1':
-                    self.unlock()
-                    self.menu()
-                case '2':
-                    self.Apagar()
-                    FabricaDeTelefonos.menu_de_telefonos()
-                case other:
-                    print('Esta opción no está disponible')
-                    self.menu()
 
-        elif self.encendido and not self.bloqueado: # Si el celular esta desbloqueado
-            match input('''¿Qué aplicación quiere utilizar?\n1. Llamadas\n2. Contactos\n3. Mensaje de texto\n4. Mail\n5. App store\n6. Configuración\n7. Apagar'''):
-                case '1':
-                    #Llamadas.menu() todavia no creado
-                    pass
-                case '2':
-                    Contactos.menu()
-                case '3':
-                    #Sms.menu() todavia no creado
-                    pass
-                case '4':
-                    Mail.menu()
-                case '5':
-                    AppStore.menu()
-                case '6':
-                    Config.menu()
-                case '7':
-                    self.Apagar()
-                case other:
-                    print('Esa opción no está disponible en este momento')
-                    self.menu()
-        else:
-            print('Algo funciona mal')
+    @staticmethod
+    def tamanio_a_bytes(tamanio_formateado):
+        """Convierte una cadena de tamaño formateado (ej. "117.74 MB") a su valor en bytes.
 
+        Args:
+            tamanio_formateado (str): Tamaño en formato de cadena con sufijo (ej. "1.5 GB").
+
+        Returns:
+            int: El tamaño convertido a bytes.
+
+        Raises:
+            ValueError: Si el formato de entrada no es válido.
+        """
+        # Quitar espacios, convertir a mayúsculas, y eliminar la letra "B" si existe
+        tamanio_formateado = tamanio_formateado.replace(" ", "").upper().replace("B", "")
+
+        # Diccionario de sufijos y su potencia de 1024 correspondiente
+        sufijos = {"K": 1, "M": 2, "G": 3, "T": 4, "P": 5}
+
+        # Recorrer el diccionario para encontrar el sufijo que coincida al final de la cadena
+        for sufijo, potencia in sufijos.items():
+            if tamanio_formateado.endswith(sufijo):
+                # Extraer la parte numérica y convertirla a float
+                valor = float(tamanio_formateado[:-len(sufijo)])
+                # Calcular el tamaño en bytes usando la potencia de 1024
+                return int(valor * (1024 ** potencia))
+
+        # Si no hay sufijo (es decir, el valor está en bytes), convertir directamente
+        return int(float(tamanio_formateado))
 
 class FabricaDeTelefonos:
     def __init__(self):
         self.crear_archivo_no_existe('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
         self.telefonos = self.extraer_archivo('telefonos.csv')
 
-    def crear_archivo_no_existe(self, archivo, filas_iniciales):
+    def crear_archivo_no_existe(self, archivo, filas_iniciales): # ESTA EN FUNCIONES AUXILIARES
         try:
             with open(archivo, 'x', encoding='utf-8', newline='') as arch:
                 escritor = csv.writer(arch)
@@ -110,7 +151,7 @@ class FabricaDeTelefonos:
         except FileExistsError:
             return
   
-    def extraer_archivo(self, archivo_csv):
+    def extraer_archivo(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
         telefonos = dict()
         try:
             with open(archivo_csv, mode='r', newline='') as archivo:
@@ -161,7 +202,7 @@ class FabricaDeTelefonos:
         else:
             print('No hay telefonos creados ')
     
-    def actualizar_archivos(self):
+    def actualizar_archivos(self): # ESTA EN FUNCIONES AUXILIARES
         with open('telefonos.csv', 'w', encoding='utf-8', newline='') as archivo:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
@@ -190,5 +231,5 @@ class FabricaDeTelefonos:
 
 
 # Crear una instancia de FabricaDeTelefonos y llamar al menú
-mi_fabrica = FabricaDeTelefonos()  # Crear la instancia
-mi_fabrica.menu_de_telefonos()  # Llamar al método del menú
+# mi_fabrica = FabricaDeTelefonos()  # Crear la instancia
+# mi_fabrica.menu_de_telefonos()  # Llamar al método del menú
