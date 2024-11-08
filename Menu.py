@@ -19,12 +19,12 @@ from Stack import *
 central = Central()
 lista_telefonos = []
 fabrica_de_telefonos=FabricaDeTelefonos()
-llamadas=Llamadas()
-appstore=AppStore()
-mail=Mail()
-sms=SMS()
-config=Config()
-contactos=Contactos()
+llamadas=Llamadas(0)
+appstore=AppStore(0)
+mail=Mail(0)
+sms=SMS(0)
+config=Config(0)
+contactos=Contactos(0)
 # no se si falta alguna ams
 
 
@@ -184,4 +184,4 @@ def menu_config(telefono):
 
 
 
-
+menu1()

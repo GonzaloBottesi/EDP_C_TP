@@ -173,9 +173,9 @@ class FabricaDeTelefonos:
         version=input('Ingrese la version: ')
         ram = input('Ingrese la RAM: ')
         almacenamiento = input('Ingrese el tamaño de almacenamiento: ')
-        while not almacenamiento.isdigit():
-            almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
-        telefono = Telefono(id, nombre, modelo, os, version, ram, int(almacenamiento), None)  # Asigna None o un valor a `numero`
+        #while not almacenamiento.isdigit(): ACLARAR PARA EL USUARIO EL FORMATO
+            #almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
+        telefono = Telefono(id, nombre, modelo, os, version, ram, almacenamiento, None)  # Asigna None o un valor a `numero`
         self.telefonos[id] = telefono
 
     def eliminar_telefono(self):
