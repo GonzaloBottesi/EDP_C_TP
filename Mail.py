@@ -26,9 +26,4 @@ class Mail(Aplicacion):
             leido = "Leido" if m['leido'] else "No leido"
             print(f"Asunto: {m['asunto']}, Fecha: {m['fecha']}, Estado: {leido}")
 
-    def menu(self):
-        match input('¿Qué quiere hacer con su Mail?'):
-            case '1':
-                pass #COMPLETAR
-            case '2':
-                pass #COMPLETAR
+    

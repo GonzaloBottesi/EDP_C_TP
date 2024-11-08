@@ -95,46 +95,6 @@ class Telefono:
         datos_estado = "activados" if self.configParameters.datos else "desactivados"
         print(f"Red móvil: {red_estado}, Datos móviles: {datos_estado}")
 
-    def menu(self):
-        self.powerButton() # Al entrar al menu se prende solo el celular
-        
-        if self.encendido and self.bloqueado: # Si el celular esta bloqueado
-            match input('¿Qué quiere hacer con el celular?\n1. Desbloquear\n2. Apagar '):
-                case '1':
-                    self.unlock()
-                    self.menu()
-                case '2':
-                    self.Apagar()
-                    self.lock()
-                    FabricaDeTelefonos.menu_de_telefonos()
-                case other:
-                    print('Esta opción no está disponible')
-                    self.menu()
-
-        elif self.encendido and not self.bloqueado: # Si el celular esta desbloqueado
-            match input('''¿Qué aplicación quiere utilizar?\n1. Llamadas\n2. Contactos\n3. Mensaje de texto\n4. Mail\n5. App store\n6. Configuración\n7. Apagar'''):
-                case '1':
-                    #Llamadas.menu() todavia no creado
-                    pass
-                case '2':
-                    Contactos.menu()
-                case '3':
-                    #Sms.menu() todavia no creado
-                    pass
-                case '4':
-                    Mail.menu()
-                case '5':
-                    AppStore.menu()
-                case '6':
-                    Config.menu()
-                case '7':
-                    self.Apagar()
-                    self.lock()
-                case other:
-                    print('Esa opción no está disponible en este momento')
-                    self.menu()
-        else:
-            print('Algo funciona mal')
 
     @staticmethod
     def tamanio_a_bytes(tamanio_formateado):

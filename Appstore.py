@@ -166,14 +166,6 @@ class AppStore (Aplicacion):
         return True
         
     
-        
-    def menu(self):
-        match input('¿Qué quiere hacer con la AppStore?'):
-            case '1':
-                pass #COMPLETAR
-            case '2':
-                pass #COMPLETAR
-
 
 data = ConfigParameters('Gonzalo Bottesi','379791',True,True,10000000000000,'3.0.0')
 sampledict = dict()

@@ -68,8 +68,12 @@ class SMS (Aplicacion):
             #Elegir un mensaje
             #Dentro del mensaje, dar la opcion de borrar
         
+        number = 1
+        
         for header in self.bandeja:
             print(f'{number}. {header}: {self.bandeja[header]}')
+            number += 1
+            
         return None
         
         ##Revisar codigo
@@ -152,14 +156,6 @@ class SMS (Aplicacion):
                 print("Opción no válida.")
 
             pass
-
-    def menu():
-        match input('¿Qué quiere hacer con los SMS?\n1. Enviar mensaje de SMS\n2. Recibir(?)\n3. Ver bandeja de entrada\n4. Ver historial de llamadas\n.5 Eliminar mensajes\n'):
-            case '1':
-                pass #COMPLETAR
-            case '2':
-                pass #COMPLETAR
-
 
 testnumber = '1159369841'
 

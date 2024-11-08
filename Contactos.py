@@ -32,11 +32,3 @@ class Contactos(Aplicacion):
             print ("El contacto no existe")
         else:
             self.listaContactos.update({name : value})
-
-    def menu(self):
-        match input('¿Qué quiere hacer con la aplicacion Contactos?'):
-            case '1':
-                pass #COMPLETAR
-            case '2':
-                pass #COMPLETAR
-
