@@ -20,7 +20,7 @@ class SMS (Aplicacion):
         destiny = input('Ingrese el numero del destinatario: ')
         message = input('Ingrese el mensaje:')
         
-        packet = ['SMS',telNumber , destiny, 'Fecha y hora' , message]
+        packet = ['SMS', telNumber , destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , message]
         
         return packet
     
@@ -64,14 +64,28 @@ class SMS (Aplicacion):
         self.bandeja.update({header : message})
     
     def eraseMessage(self):
-        self.viewMessage()
         
-        toErase = input('Si desea eliminar un solo mensaje, ingrese el numero del mensaje.\n Si desea eliminar por encabezado, ingreselo.')
+        """Borra el mensaje, define si borra por numero de mensaje o por contenido del encabezado
+        """        
+        options = ['Y', 'N']
         
-        if toErase.isdigit():
-            self.eraseMessageSingle(int(toErase) - 1)
-        else:
+        choice = input('Quiere borrar multiples mensajes (Y/N)').upper()
+        
+        if not choice in options:
+            print ('Error, por favor ingrese una opcion correcta')
+          
+        qty = self.viewMessage()  
+            
+        if choice == 'Y':
+            toErase = input('Ingrese el encabezado de los mensajes a borrar. Si ingresa una parte, se borraran todos aquellos que la contengan')
             self.eraseMessageBulk(toErase)
+        else:
+            toErase = input('Ingrese el numero del mensaje')
+        
+            if toErase.isdigit() and toErase <= qty:
+                self.eraseMessageSingle(int(toErase) - 1)
+            else:
+                print('Error: no existe el mensaje')
             
     def eraseMessageSingle(self, number):
     
@@ -109,94 +123,4 @@ class SMS (Aplicacion):
             print(f'{number}. {header}: {message}')
             number += 1
             
-        return None
-        
-        ##Revisar codigo
-        
-        
-        
-        
-        
-        
-        
-        # Configuración para paginación
-        page_size = 5  # Cantidad de mensajes por página
-        total_messages = len(self.bandeja.items())
-        
-        if total_messages == 0:
-            print("La bandeja de entrada está vacía.")
-            return
-        
-        # Índice de inicio para la paginación
-        start = 0
-        
-        while True:
-            end = min(start + page_size, total_messages)
-            print(f"\nMostrando mensajes {start + 1} a {end} de {total_messages}")
-            
-            # Mostrar encabezado de cada mensaje en la página actual
-            for i in range(start, end):
-                header, _ = self.bandeja.items[i]
-                print(f"{i + 1}. {header}")
-            
-            # Opciones de navegación y selección, menu para la visualiza
-            print("\nOpciones:")
-            print("1. Elegir un mensaje para ver su contenido")
-            print("2. Siguiente página")
-            print("3. Página anterior")
-            print("4. Salir de la bandeja")
-            
-            choice = input("Seleccione una opción: ")
-            
-            if choice == "1":
-                # Seleccionar un mensaje para ver y dar opción de borrar
-                index = int(input("Ingrese el número del mensaje para ver: ")) - 1
-                if 0 <= index < total_messages:
-                    header, message = self.bandeja.items[index]
-                    print(f"\nMensaje de {header}:")
-                    print(f"Contenido: {message}")
-                    
-                    # Opción de borrar el mensaje
-                    delete_choice = input("¿Desea eliminar este mensaje? (s/n): ").lower()
-                    if delete_choice == "s":
-                        del self.bandeja.items[index]
-                        total_messages -= 1
-                        print("Mensaje eliminado.")
-                        # Ajustar página en caso de que sea necesario
-                        if start >= total_messages:
-                            start = max(0, start - page_size)
-                else:
-                    print("Número de mensaje no válido.")
-            
-            elif choice == "2":
-                # Siguiente página
-                if end < total_messages:
-                    start += page_size
-                else:
-                    print("No hay más páginas.")
-            
-            elif choice == "3":
-                # Página anterior
-                if start > 0:
-                    start -= page_size
-                else:
-                    print("Ya está en la primera página.")
-            
-            elif choice == "4":
-                # Salir de la vista de mensajes
-                print("Saliendo de la bandeja de entrada.")
-                break
-            
-            else:
-                print("Opción no válida.")
-
-            pass
-
-test = SMS('0 k')
-test.bandeja = {
-  "brand": "Ford",
-  "model": "Mustang",
-  "year": '1964'
-}
-test.eraseMessage()
-test.eraseMessage()
+        return number

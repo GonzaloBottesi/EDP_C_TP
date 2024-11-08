@@ -1,4 +1,5 @@
 from Aplicacion import Aplicacion
+import datetime
 
 ##Esta clase fue comentada para poder probar otra cosa. Sin embargo, no creo que tenga que tener ambos telefonos si hablamos de la aplicacion de llamadas
 ##En mi opinion, la aplicacion solo tiene que enviarle un paquete a la central y recibir un paquete de la central, toda la logistica de la llamada 
@@ -61,4 +62,3 @@ from Aplicacion import Aplicacion
 class Llamadas(Aplicacion):
     def __init__(self, peso) -> None:
         super().__init__(peso)
-        
