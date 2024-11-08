@@ -68,8 +68,11 @@ def menu_telefono(telefono: Telefono):
     if telefono.encendido and telefono.bloqueado: # Si el celular esta bloqueado
         match input('¿Qué quiere hacer con el celular?\n1. Desbloquear\n2. Apagar '):
             case '1':
-                telefono.unlock()
-                menu_telefono_prendido(telefono)
+                password = input('Ingrese la contraseña: ')
+                if telefono.unlock(password):
+                    menu_telefono_prendido(telefono)
+                else:
+                    menu_telefono(telefono)
             case '2':
                 telefono.Apagar()
                 telefono.lock()
@@ -145,20 +148,36 @@ def menu_mail(telefono: Telefono):
     match input('¿Qué quiere hacer con su Mail?\n1. Ver email por no leidos\n2. Ver email por orden de fecha\n3. Salir'):
         case '1':
             telefono.aplicacionActual.ver_mail_por_no_leidos()
+            menu_mail(telefono)
         case '2':
             telefono.aplicacionActual.ver_mail_por_fecha()
+            menu_mail(telefono)
+        case '3':
+            menu_telefono(telefono)
+    
+    
 def menu_sms(telefono : Telefono):
     match input('Que quiere hacer con los SMS?\n1. Enviar mensaje de SMS\n2. Recibir(?)\n3. Ver bandeja de entrada\n4. Ver historial de llamadas\n.5 Eliminar mensajes\n6. Salir'):
             case '1':
+                
+                menu_sms(telefono)
                 pass #COMPLETAR
             case '2':
+                
+                menu_sms(telefono)
                 pass #COMPLETAR
+    
 def menu_appstore(telefono: Telefono):
     match input('¿Qué quiere hacer con la AppStore?'):
         case '1':
+            
+            menu_appstore(telefono)
             pass #COMPLETAR
         case '2':
+            
+            menu_appstore(telefono)
             pass #COMPLETAR
+
 
 def menu_config(telefono: Telefono):
     
@@ -166,28 +185,31 @@ def menu_config(telefono: Telefono):
      match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar red movil\n4. Desactivar red movil\n5. Activar datos\n6. Desactivar datos\n7. Salir'):
             case '1':
                 telefono.aplicacionActual.setName(telefono.configParameters)
+                menu_config(telefono)
 
             case '2':
                 telefono.aplicacionActual.changePassword(telefono.configParameters)
+                menu_config(telefono)
 
             case '3':
                 telefono.aplicacionActual.red(telefono.configParameters) # diferencia entre 3 y 4
+                menu_config(telefono)
 
             case '4':
                 telefono.aplicacionActual.red(telefono.configParameters)# diferenciar entre 3 y 4
+                menu_config(telefono)
 
             case '5':
                 telefono.aplicacionActual.datos(telefono.configParameters) # diferenciar entre 5 y 6
+                menu_config(telefono)
 
             case '6':
                 telefono.aplicacionActual.datos(telefono.configParameters) # diferenciar entre 5 y 6
-
+                menu_config(telefono)
             case '7':
                 menu_telefono_prendido(telefono)
                 
             case other:
                 pass
-
-    menu_config(telefono)
 
 menu1()

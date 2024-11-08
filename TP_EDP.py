@@ -48,26 +48,35 @@ class Telefono:
             
     def unlock(self, password=None):
         
-        """
-        Desbloquea el telefono
+        """Desbloquea el telefono
         
         Args:
             Password: Clave del telefono, valor default None
+
+        Returns:
+            Bool: True si se desbloqueo, False si no
+        """        """
+        
         
         """        
         
         if self.encendido:
             if not self.bloqueado:
                 print("El teléfono ya se encuentra desbloqueado")
+                return True
             elif self.configParameters.pin is None:
                 self.bloqueado = False
+                return True
             else:
                 if self.configParameters.pin == password:
                     self.bloqueado = False
+                    return True
                 else:
                     print("Contraseña incorrecta")
+                    return False
         else:
-            print("El teléfono está apagado")    
+            print("El teléfono está apagado")
+            return False   
     
     def openApp(self):
         
@@ -113,6 +122,9 @@ class Telefono:
         Raises:
             ValueError: Si el formato de entrada no es válido.
         """
+        if isinstance(tamanio_formateado, int):
+            return int(float(tamanio_formateado))
+        
         # Quitar espacios, convertir a mayúsculas, y eliminar la letra "B" si existe
         tamanio_formateado = tamanio_formateado.replace(" ", "").upper().replace("B", "")
 
@@ -170,11 +182,11 @@ class FabricaDeTelefonos:
         nombre = input('Ingrese el nombre de su teléfono: ')
         modelo = input('Ingrese el modelo de su teléfono: ')
         os = input('Ingrese el sistema operativo: ')
-        version=input('Ingrese la version: ')
+        version = input ('Ingrese la version: ')
         ram = input('Ingrese la RAM: ')
         almacenamiento = input('Ingrese el tamaño de almacenamiento: ')
-        #while not almacenamiento.isdigit(): ACLARAR PARA EL USUARIO EL FORMATO
-            #almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
+        #while not almacenamiento.isdigit():
+         #   almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
         telefono = Telefono(id, nombre, modelo, os, version, ram, almacenamiento, None)  # Asigna None o un valor a `numero`
         self.telefonos[id] = telefono
 
@@ -201,10 +213,9 @@ class FabricaDeTelefonos:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
             for telefono in self.telefonos.values():
-                escritor.writerow([telefono.id, telefono.nombre, telefono.modelo, telefono.os,
-                                   telefono.version, telefono.ram, telefono.almacenamiento, telefono.numero])
+                escritor.writerow([telefono.id, telefono.configParameters.nombre, telefono.modelo, telefono.os,
+                                   telefono.configParameters.version, telefono.ram, telefono.configParameters.almacenamiento, telefono.numero])
     
-
 
 # Crear una instancia de FabricaDeTelefonos y llamar al menú
 # mi_fabrica = FabricaDeTelefonos()  # Crear la instancia
