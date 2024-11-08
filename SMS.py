@@ -62,17 +62,51 @@ class SMS (Aplicacion):
 
         
         self.bandeja.update({header : message})
+    
+    def eraseMessage(self):
+        self.viewMessage()
         
+        toErase = input('Si desea eliminar un solo mensaje, ingrese el numero del mensaje.\n Si desea eliminar por encabezado, ingreselo.')
+        
+        if toErase.isdigit():
+            self.eraseMessageSingle(int(toErase) - 1)
+        else:
+            self.eraseMessageBulk(toErase)
+            
+    def eraseMessageSingle(self, number):
+    
+        headerList = [* self.bandeja.keys()]
+        self.bandeja.pop(headerList[number])
+        print('Mensaje eliminado exitosamente')
+        return 1
+    
+    def eraseMessageBulk(self, header):
+            
+        if not any(header in i for i in self.bandeja):
+            print("No existe un encabezado con esos datos")
+            return 0
+                
+        i = 0
+        eraseList = []
+        for hd in self.bandeja:
+            if header in hd:
+                i += 1
+                eraseList.append(hd)
+                
+        for erase in eraseList:
+            self.bandeja.pop(erase)
+            
+        print(f"Se eliminaron {i} mensajes")
+        return i
+      
     def viewMessage(self):
         
-            #Mostrar todos los mensajes de la bandeja, preferentemente paginada
-            #Elegir un mensaje
-            #Dentro del mensaje, dar la opcion de borrar
+        ##El paginado se deja como extra en caso de que haya tiempo
         
         number = 1
         
-        for header in self.bandeja:
-            print(f'{number}. {header}: {self.bandeja[header]}')
+        for header,message in self.bandeja.items():
+            print(f'{number}. {header}: {message}')
             number += 1
             
         return None
@@ -157,3 +191,12 @@ class SMS (Aplicacion):
                 print("Opción no válida.")
 
             pass
+
+test = SMS('0 k')
+test.bandeja = {
+  "brand": "Ford",
+  "model": "Mustang",
+  "year": '1964'
+}
+test.eraseMessage()
+test.eraseMessage()
