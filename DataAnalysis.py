@@ -134,12 +134,6 @@ class DataAnalysis:
         pricesArray = np.array(appPrices)
         median = np.median(pricesArray)
         
-        return median
-    
-    
-    
-test = DataAnalysis()
-mediana = test.paidMedian()
-
-print(f'El precio mas visto es ${mediana}')
-    
+        print(f'El precio mas visto es ${median}')
+        
+        return True
