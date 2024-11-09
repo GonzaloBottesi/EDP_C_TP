@@ -1,7 +1,6 @@
 import csv
 from TP_EDP import Telefono
-from LLamadas import Llamadas
-
+import datetime
 
 class Central():
     
@@ -71,40 +70,97 @@ class Central():
         else:
             print(f"El telefono con numero {numero} no esta registrado.")
             return False
-
-    def realizar_llamada(self, numero_origen, numero_destino):
-        """Inicia la llamada verificando la disponibilidad de ambos teléfonos."""
-        if numero_origen in self.telefonos and numero_destino in self.telefonos:
-            telefono_origen = self.telefonos[numero_origen]
-            telefono_destino = self.telefonos[numero_destino]
-            
-            # Verificar si ambos teléfonos están disponibles para la llamada
-            if self.verificar_disponibilidad_de_red(numero_origen) and self.verificar_disponibilidad_de_red(numero_destino):
-                if telefono_destino.ocupado:
-                    print(f"No se puede realizar la llamada. El número {numero_destino} está ocupado.")
-                else:
-                    # Crear una instancia de Llamadas y gestionar el inicio y final de la llamada
-                    llamada = Llamadas(telefono_origen, telefono_destino, peso=5000)  # Peso en bytes como ejemplo
-                    llamada.onOff()  # Abrir la aplicación de llamadas
-                    
-                    if llamada.iniciar():
-                        llamada.registrar(self)  # Registrar la llamada en la central
-                        llamada.finalizar()      # Finalizar la llamada después de registrar
-                    llamada.onOff()  # Cerrar la aplicación de llamadas
-            else:
-                print("Uno o ambos teléfonos no están disponibles para la llamada.")
+    def realizar_llamada(self, paquete_llamada):
+        """Gestiona la llamada verificando la disponibilidad de Tel2 y notificando a Tel1 según la respuesta."""
+        
+        numero_origen = paquete_llamada[1]
+        numero_destino = paquete_llamada[2]
+        
+        # Paso 1: Verificar si Tel2 está disponible
+        if not self.verificar_disponibilidad_de_red(numero_destino):
+            print(f"No se puede realizar la llamada. El número {numero_destino} está ocupado o sin red.")
+            print(f"Notificando a {numero_origen} que {numero_destino} no está disponible.")
+            self.registrar_comunicacion("no realizado", numero_origen, numero_destino)
+            return
+        
+        # Paso 2: Enviar solicitud de llamada a Tel2
+        print(f"Enviando solicitud de llamada de {numero_origen} a {numero_destino}.")
+        respuesta = input(f"{numero_destino}, ¿acepta la llamada? (SI/NO): ").upper()
+        
+        # Paso 3: Evaluar respuesta de Tel2 y notificar a Tel1
+        if respuesta == "SI":
+            print(f"Llamada aceptada por {numero_destino}. Conectando...")
+            self.telefonos[numero_origen].ocupado = True
+            self.telefonos[numero_destino].ocupado = True
+            self.registrar_comunicacion("realizada", numero_origen, numero_destino)
         else:
-            print(f"El teléfono con número {numero_destino} no está registrado en la central.")
-
+            print(f"Llamada rechazada por {numero_destino}. Notificando a {numero_origen}.")
+            self.registrar_comunicacion("rechazada", numero_origen, numero_destino)
+    
     def registrar_comunicacion(self, tipo, numero_origen, numero_destino, contenido=None):
-        log = {
-            'tipo': tipo,
-            'numero_origen': numero_origen,
-            'numero_destino': numero_destino,
-            'contenido': contenido
-        }
+        """Registra las comunicaciones según el tipo de respuesta de la llamada."""
+        
+        # Solo se registra la llamada si fue realizada o rechazada
+        if tipo == "realizada":
+            log = {
+                'tipo': 'llamada',
+                'numero_origen': numero_origen,
+                'numero_destino': numero_destino,
+                'fecha': datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),
+                'contenido': "Llamada conectada"
+            }
+        elif tipo == "rechazada":
+            log = {
+                'tipo': 'llamada rechazada',
+                'numero_origen': numero_origen,
+                'numero_destino': numero_destino,
+                'fecha': datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),
+                'contenido': "Llamada rechazada"
+            }
+        else:
+            log = {
+                'tipo': 'no realizado',
+                'numero_origen': numero_origen,
+                'numero_destino': numero_destino,
+                'fecha': datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"),
+                'contenido': "La llamada no se pudo realizar"
+            }
+
         self.registro_comunicaciones.append(log)
         print(f"Comunicación registrada: {log}")
+    
+    def recibir_sms(self, paquete_sms):
+        """Recibe un paquete SMS y lo procesa, verificando si el teléfono está registrado."""
+        
+        numero_origen = paquete_sms[1]
+        numero_destino = paquete_sms[2]
+        mensaje = paquete_sms[4]
+        
+        # Verificar si ambos teléfonos están registrados
+        if numero_origen not in self.telefonos:
+            print(f"El teléfono de origen {numero_origen} no está registrado en la central.")
+            return
+        
+        if numero_destino not in self.telefonos:
+            print(f"El teléfono de destino {numero_destino} no está registrado en la central.")
+            return
+        
+        # Verificar si el teléfono origen está disponible para enviar el mensaje
+        telefono_origen = self.telefonos[numero_origen]
+        telefono_destino = self.telefonos[numero_destino]
+        
+        if not telefono_origen.encendido:
+            print(f"El teléfono de origen {numero_origen} está apagado.")
+            return
+        
+        if not telefono_destino.encendido:
+            print(f"El teléfono de destino {numero_destino} está apagado.")
+            return
+        
+        # Si todo está en orden, se recibe el mensaje
+        print(f"Mensaje recibido de {numero_origen} a {numero_destino}: {mensaje}")
+        self.registrar_comunicacion_sms("recibido", numero_origen, numero_destino, mensaje)
+
 
 
 
