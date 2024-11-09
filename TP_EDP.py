@@ -13,7 +13,12 @@ class Telefono:
     def __init__(self, id, nombre, modelo, os, version, ram, almacenamiento: int, numero) -> None:
         
         self.listaApps = dict()
-        self.listaApps.update({"AppStore" : AppStore('0 K'), "Config" : Config('0 K'), "Llamadas" : Llamadas('0 K'), "Mail" : Mail('0 K'), "SMS" : SMS('0 K')})
+        self.listaApps.update({"AppStore" : AppStore('0 K'), 
+                               "Config" : Config('0 K'), 
+                               "Llamadas" : Llamadas('0 K'), 
+                               "Mail" : Mail('0 K'), 
+                               "SMS" : SMS('0 K') , 
+                               "Contactos" : Contactos('0 K')})
         self.id = id
         self.nombre = nombre
         self.modelo = modelo
