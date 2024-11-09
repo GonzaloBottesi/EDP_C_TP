@@ -105,7 +105,6 @@ class DataAnalysis:
                 appCount[index] += 1
         
         appCount = appCount.astype('float64')
-        
         totalPaidAppCount = appCount.sum()
         
         filteredPercentage = []
@@ -118,15 +117,29 @@ class DataAnalysis:
         
         filteredArray = np.array(filteredPercentage)
         
+        ##Cantidad de apps pagas por categoria, con proporcion mayores uqe 1%
+        
         pyplot.pie(filteredArray, labels= filteredCategories)
-        pyplot.legend()
+        pyplot.legend( title = 'Categorias:')
         pyplot.show()
-            
-            
-        print(appCount)
-     
+        
+    def paidMedian(self):
+        
+        appPrices = []
+        
+        for i in range(len(self.rawData[Columnas.APP.value])):
+            if self.rawData[Columnas.TYPE.value][i] == 'Paid':
+                appPrices.append(float(self.rawData[Columnas.PRICE.value][i]))
+                
+        pricesArray = np.array(appPrices)
+        median = np.median(pricesArray)
+        
+        return median
+    
+    
+    
 test = DataAnalysis()
+mediana = test.paidMedian()
 
-test.paidPieChart()
-
-print ('fin')
+print(f'El precio mas visto es ${mediana}')
+    
