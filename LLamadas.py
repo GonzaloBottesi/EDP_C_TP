@@ -81,8 +81,7 @@ class Llamadas(Aplicacion):
         return packet
     
     def receivePacket(self, packet : list):
-        
-        
+            
         if len(packet) != 5:
             print('Error en el largo del paquete')
             return False
@@ -129,11 +128,10 @@ class Llamadas(Aplicacion):
                 self.callHistory.update({header : 'En curso'})
                 packet[4] = 'K'
                 return packet
-                    
-            
+           
     def endCallRequest (self, tel1 : str):
         
-        if not ('En curso' in self.callHistory.values()):
+        if 'En curso' not in self.callHistory.values():
             print('No hay llamada en curso')
             return False
         
@@ -146,8 +144,7 @@ class Llamadas(Aplicacion):
         target = target.split('-')
         
         packet = ['LLAMADA', tel1 , target[0] , target[1] , 'S' ]
-        
-        
+  
         time1 = datetime.datetime.strptime(target[1],"%d/%m/%Y, %H:%M:%S") ##Inicio de comunicacion
         time2 = datetime.datetime.now().replace(microsecond = 0) #Fin de comunicacion
         delta = time2 - time1
@@ -155,9 +152,7 @@ class Llamadas(Aplicacion):
         self.callHistory.update({target[0] + '-' + target[1] : 'Duracion: ' + str(delta)})
         
         return packet
-            
-            
-            
+       
     def getCallHistory(self):
         
         if len(self.callHistory.keys()) == 0:
@@ -175,10 +170,7 @@ class Llamadas(Aplicacion):
         date = datetime.datetime.strptime(header[1], format = "%d/%m/%Y, %H:%M:%S")
         
         return date
-    
-    
-    
-    
+  
 Joaco = Llamadas(0) #Joaco 1162491238
 Gonza = Llamadas(0) #Gonza 1159369841
 
