@@ -164,16 +164,3 @@ class AppStore (Aplicacion):
         
             
         return True
-        
-    
-
-data = ConfigParameters('Gonzalo Bottesi','379791',True,True,10000000000000,'3.0.0')
-sampledict = dict()
-
-test = AppStore('0 K')
-
-sampledict.update({"Appstore" : test})
-
-test.installApp(data,sampledict,"Paper flowers instructions")
-test.installApp(data,sampledict,'Sketch - Draw & Paint')
-test.uninstallApp(data,sampledict,"Paper flowers instructions")

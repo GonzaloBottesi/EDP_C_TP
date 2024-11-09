@@ -170,28 +170,3 @@ class Llamadas(Aplicacion):
         date = datetime.datetime.strptime(header[1], format = "%d/%m/%Y, %H:%M:%S")
         
         return date
-  
-Joaco = Llamadas(0) #Joaco 1162491238
-Gonza = Llamadas(0) #Gonza 1159369841
-
-packet = Joaco.sendCallRequest('1162491238')
-response = Gonza.receivePacket(packet)
-Joaco.receivePacket(response)
-
-endPacket = Gonza.endCallRequest('1159369841')
-
-Joaco.receivePacket(endPacket)
-
-print(Gonza.callHistory)
-print(Joaco.callHistory)
-
-packet = Joaco.sendCallRequest('1162491238')
-response = Gonza.receivePacket(packet)
-Joaco.receivePacket(response)
-
-endPacket = Joaco.endCallRequest('1162491238')
-
-Gonza.receivePacket(endPacket)
-
-print(Gonza.callHistory)
-print(Joaco.callHistory)

@@ -147,6 +147,11 @@ class Telefono:
         # Si no hay sufijo (es decir, el valor está en bytes), convertir directamente
         return int(float(tamanio_formateado))
 
+    def __str__(self) -> str:
+        string = f'Telefono de {self.nombre}; Num: {self.numero} ; Modelo {self.modelo}'
+        return string
+    
+    
 class FabricaDeTelefonos:
     def __init__(self):
         self.crear_archivo_no_existe('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
@@ -164,7 +169,7 @@ class FabricaDeTelefonos:
     def extraer_archivo(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
         telefonos = dict()
         try:
-            with open(archivo_csv, mode='r', newline='') as archivo:
+            with open(archivo_csv, mode='r', newline='', encoding='utf-8') as archivo:
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)  # Saltar encabezados
                 for telefono in lector_csv:
