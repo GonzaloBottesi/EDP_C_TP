@@ -153,7 +153,9 @@ class DataAnalysis:
             
         x, y = list(zip(*sorted(zip(appInstals,categories))))    
         
-        print()
+        print("TOP 5 CATEGORIAS MCON MAS DESCARGAS:")
+        for i in range(1,6):
+            print(f'{i}. {y[-i]}, {x[-i]} Descargas')
         
         pyplot.ylabel('Categorias')
         pyplot.xlabel('Descargas')
