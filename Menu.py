@@ -53,30 +53,39 @@ def menu_central_de_telefonos():
 
 
 def menu_fabrica_de_telefonos():
-    match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
-        case '1':
-            newPhoneEntry = fabrica_de_telefonos.crear_telefono()  # Volver al menú
-            lista_telefonos.update(newPhoneEntry)
-            menu_fabrica_de_telefonos()
-        case '2':
-            fabrica_de_telefonos.eliminar_telefono() # Volver al menú
-            menu_fabrica_de_telefonos()
-        case '3':
-            telefono = fabrica_de_telefonos.elegir_telefono()
-            if isinstance(telefono, Telefono):
-                lista_telefonos.update({telefono.id : telefono})
-                telefono.powerButton() # Al entrar al menu se prende solo el celular
-                print('Telefono encendido')
-                menu_telefono(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
-            else:
-                menu_fabrica_de_telefonos()
-        case '4':
-            print('Salir')
-            fabrica_de_telefonos.actualizar_archivos()
-            menu1()
-        case other:
-            print('Esta opción no está disponible en este momento')
-            menu_fabrica_de_telefonos()
+    salir = False
+    while not salir:
+        match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
+            case '1':
+                newPhoneEntry = fabrica_de_telefonos.crear_telefono()  # Volver al menú
+                lista_telefonos.update(newPhoneEntry)
+                #menu_fabrica_de_telefonos()
+            case '2':
+                id = fabrica_de_telefonos.eliminar_telefono() # Volver al menú
+                if id is not False:
+                    lista_telefonos.pop(id)
+                #menu_fabrica_de_telefonos()
+            case '3':
+                telefono = fabrica_de_telefonos.elegir_telefono()
+                if isinstance(telefono, Telefono):
+                    lista_telefonos.update({telefono.id : telefono})
+                    telefono.powerButton() # Al entrar al menu se prende solo el celular
+                    print('Telefono encendido')
+                    menu_telefono(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
+                else:
+                    pass
+                   # menu_fabrica_de_telefonos()
+            case '4':
+                salir = True
+                print('Salir')
+                fabrica_de_telefonos.actualizar_archivos()
+                #menu1()
+            case other:
+                print('Esta opción no está disponible en este momento')
+                #menu_fabrica_de_telefonos()
+
+    menu1()
+
 
 def menu_telefono(telefono: Telefono): 
     
@@ -195,38 +204,42 @@ def menu_appstore(telefono: Telefono):
 
 
 def menu_config(telefono: Telefono):
-    
-    if isinstance(telefono.aplicacionActual, Config):
-     match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar red movil\n4. Desactivar red movil\n5. Activar datos\n6. Desactivar datos\n7. Salir'):
-            case '1':
-                telefono.aplicacionActual.setName(telefono.configParameters)
-                menu_config(telefono)
+    salir = False
+    while not salir:
+        if isinstance(telefono.aplicacionActual, Config):
+            match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar red movil\n4. Desactivar red movil\n5. Activar datos\n6. Desactivar datos\n7. Salir'):
+                    case '1':
+                        telefono.aplicacionActual.setName(telefono.configParameters)
+                        #menu_config(telefono)
 
-            case '2':
-                telefono.aplicacionActual.changePassword(telefono.configParameters)
-                menu_config(telefono)
+                    case '2':
+                        telefono.aplicacionActual.changePassword(telefono.configParameters)
+                        #menu_config(telefono)
 
-            case '3':
-                telefono.aplicacionActual.red(telefono.configParameters) # diferencia entre 3 y 4
-                menu_config(telefono)
+                    case '3':
+                        telefono.aplicacionActual.red(telefono.configParameters) # diferencia entre 3 y 4
+                        #menu_config(telefono)
 
-            case '4':
-                telefono.aplicacionActual.red(telefono.configParameters)# diferenciar entre 3 y 4
-                menu_config(telefono)
+                    case '4':
+                        telefono.aplicacionActual.red(telefono.configParameters)# diferenciar entre 3 y 4
+                        #menu_config(telefono)
 
-            case '5':
-                telefono.aplicacionActual.datos(telefono.configParameters) # diferenciar entre 5 y 6
-                menu_config(telefono)
+                    case '5':
+                        telefono.aplicacionActual.datos(telefono.configParameters) # diferenciar entre 5 y 6
+                        #menu_config(telefono)
 
-            case '6':
-                telefono.aplicacionActual.datos(telefono.configParameters) # diferenciar entre 5 y 6
-                menu_config(telefono)
-            case '7':
-                menu_telefono_prendido(telefono)
-                
-            case other:
-                pass
-
+                    case '6':
+                        telefono.aplicacionActual.datos(telefono.configParameters) # diferenciar entre 5 y 6
+                        #menu_config(telefono)
+                    case '7':
+                        #menu_telefono_prendido(telefono)
+                        
+                    case other:
+                        pass
+        else:
+            salir = True
+            
+    menu_telefono_prendido(telefono)
 
 def mostrar_lista_telefonos(telefonos : dict):
     

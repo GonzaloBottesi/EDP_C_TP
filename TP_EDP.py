@@ -209,9 +209,11 @@ class FabricaDeTelefonos:
             id = input('Ingrese el ID del celular que quiere eliminar: ')
             while id not in self.telefonos:
                 id = input('No existe ese ID\nIngrese el ID del celular que quiere eliminar: ')
-            del self.telefonos[id]
+            self.telefonos.pop(id)
+            return id
         else:
             print('No hay telefonos creados')
+            return False
      
     def elegir_telefono(self):
         if self.telefonos:
