@@ -137,3 +137,25 @@ class DataAnalysis:
         print(f'El precio mas visto es ${median}')
         
         return True
+    
+    def installsPerCategory(self):
+        
+        categories = []
+        for cat in self.rawData[Columnas.CATEGORY.value]:
+            if cat not in categories:
+                categories.append(cat)
+                
+        appInstals = np.array([0] * len(categories))
+                
+        for row in range(len(self.rawData[Columnas.APP.value])):
+            index = categories.index(self.rawData[Columnas.CATEGORY.value][row])
+            appInstals[index] += self.rawData[Columnas.INSTALLS.value][row]
+            
+        x, y = list(zip(*sorted(zip(appInstals,categories))))    
+        
+        print()
+        
+        pyplot.ylabel('Categorias')
+        pyplot.xlabel('Descargas')
+        pyplot.barh(y, x)
+        pyplot.show()
