@@ -16,7 +16,7 @@ class Telefono:
         self.listaApps.update({"AppStore" : AppStore('0 K'), 
                                "Config" : Config('0 K'), 
                                "Llamadas" : Llamadas('0 K'), 
-                               "Mail" : Mail('0 K'), 
+                               "Mail" : Mail ('0 K'), 
                                "SMS" : SMS('0 K') , 
                                "Contactos" : Contactos('0 K')})
         self.id = id
@@ -192,14 +192,18 @@ class FabricaDeTelefonos:
         nombre = input('Ingrese el nombre de su teléfono: ')
         modelo = input('Ingrese el modelo de su teléfono: ')
         os = input('Ingrese el sistema operativo: ')
-        version = input ('Ingrese la version: ')
-        ram = input('Ingrese la RAM: ')
-        almacenamiento = input('Ingrese el tamaño de almacenamiento: ')
+        version = input ('Ingrese la version (EJ. 4.0.0): ')
+        ram = input('Ingrese la RAM (EJ. 16G): ')
+        almacenamiento = input('Ingrese el tamaño de almacenamiento (EJ. 64G): ')
+        numero = input('Ingrese su numero de telefono: ')
+        while not numero.isdigit():
+            numero = input('ERROR, por favor ingrese un numero valido')
         #while not almacenamiento.isdigit():
          #   almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
-        telefono = Telefono(id, nombre, modelo, os, version, ram, almacenamiento, None)  # Asigna None o un valor a `numero`
+        telefono = Telefono(id, nombre, modelo, os, version, ram, almacenamiento, numero)  # Asigna None o un valor a `numero`
         self.telefonos[id] = telefono
-
+        return {telefono.id : telefono}
+        
     def eliminar_telefono(self):
         if self.telefonos:
             id = input('Ingrese el ID del celular que quiere eliminar: ')

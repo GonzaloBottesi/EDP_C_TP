@@ -53,15 +53,16 @@ class SMS (Aplicacion):
                 raise ValueError(f"Error en el dato {i} del paquete")
             
         
-        if len(packet) == 6: ##Tiene un apodo / esta en contactos
+        if len(packet) == 6: ##Tiene un apodo / esta en contactos (OPCIONAL, NO IMPLEMENTADO)
             header = packet[5] + ',' + packet[3]
         else:
             header = packet[1] + ',' + packet[3]
         message = packet[4]
         
-
-        
-        self.bandeja.update({header : message})
+        if message == None:
+            print('El telefono no se encuentra en linea')
+        else:
+            self.bandeja.update({header : message})
     
     def eraseMessage(self):
         
@@ -75,7 +76,7 @@ class SMS (Aplicacion):
             print ('Error, por favor ingrese una opcion correcta')
           
         qty = self.viewMessage()  
-            
+            ##numero,fecha,hora
         if choice == 'Y':
             toErase = input('Ingrese el encabezado de los mensajes a borrar. Si ingresa una parte, se borraran todos aquellos que la contengan')
             self.eraseMessageBulk(toErase)

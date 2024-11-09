@@ -17,7 +17,7 @@ from Stack import *
 #crear_archivo_no_existe('telefonos.csv',['ID','NOMBRE','MODELO','OS','VERSION','RAM','ALMACENAMIENTO','NUMERO']) #crearlo las veces que sea neceario (es decir las veces que se usan archivos)
 
 central = Central()
-lista_telefonos = []
+lista_telefonos = dict()
 fabrica_de_telefonos = FabricaDeTelefonos()
 
 # no se si falta alguna ams
@@ -36,13 +36,27 @@ def menu1():
 
 
 def menu_central_de_telefonos():
-    pass
+    
+    match input('¿Qué quiere hacer en la Central?\n1. Registrar un telefono\n2. Dar de baja un telefono\n3. Salir\n '):
+        case '1':
+            mostrar_lista_telefonos(lista_telefonos)
+            id = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
+            central.registrar_telefono(lista_telefonos[id])
+            menu_central_de_telefonos()
+        case '2':
+            mostrar_lista_telefonos(lista_telefonos)
+            id = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
+            central.eliminar_dispositivo(lista_telefonos[id])
+            menu_central_de_telefonos()
+        case '3':
+            menu1()
 
 
 def menu_fabrica_de_telefonos():
     match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
         case '1':
-            fabrica_de_telefonos.crear_telefono()  # Volver al menú
+            newPhoneEntry = fabrica_de_telefonos.crear_telefono()  # Volver al menú
+            lista_telefonos.update(newPhoneEntry)
             menu_fabrica_de_telefonos()
         case '2':
             fabrica_de_telefonos.eliminar_telefono() # Volver al menú
@@ -50,6 +64,7 @@ def menu_fabrica_de_telefonos():
         case '3':
             telefono = fabrica_de_telefonos.elegir_telefono()
             if isinstance(telefono, Telefono):
+                lista_telefonos.update({telefono.id : telefono})
                 telefono.powerButton() # Al entrar al menu se prende solo el celular
                 print('Telefono encendido')
                 menu_telefono(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
@@ -211,5 +226,12 @@ def menu_config(telefono: Telefono):
                 
             case other:
                 pass
+
+
+def mostrar_lista_telefonos(telefonos : dict):
+    
+    print('Los telefonos en el programa son:')
+    for key in telefonos.keys():
+        print(f'{key} : {telefonos[key]}')
 
 menu1()

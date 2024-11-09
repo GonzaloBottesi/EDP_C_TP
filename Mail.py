@@ -11,7 +11,7 @@ class Mail(Aplicacion):
         
 
         
-    def extraer_archivo(archivo_csv):
+    def extraer_archivo(self, archivo_csv):
         mails = {0:['-','-','-','Bienvenido a Mails','Leido']}
         try:
             with open(archivo_csv, mode='r', newline='') as archivo:
@@ -28,6 +28,7 @@ class Mail(Aplicacion):
         except Exception as e:
             print(f"Se produjo un error al leer el archivo CSV: {e}")
     
+    ''' Comentado para que no rompa, igualmente es funcion opcional
     def enviar_mail(self): # como se sabe que celular estas usando(?)
         id=input('Ingrese el ID del telefono que quiere enviar un mail')
         while id not in 'hola': # deberia chequear que el celular este en Fabrica de Telefonos que no se como hacerlo
@@ -35,7 +36,8 @@ class Mail(Aplicacion):
         mensaje=input('Ingrese el mensaje que le quiere enviar') 
         self.mails[self.mails.max()+1]=[self.mails.max()+1,'hola',id,datetime.now().strftime("%Y-%m-%d"),mensaje,'No leido'] # hola seria el ID del celular que se esta usando ahora
         print('Se envio el mail')
-        
+       '''  
+       
     def ver_mail_por_no_leidos(self):
         lista_enlazada_ordenada = ListaEnlazada()
         for clave,valor in self.mails:

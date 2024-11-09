@@ -90,7 +90,7 @@ class Llamadas(Aplicacion):
             print(f'Error de paquete: no se puede procesar {packet[0]}')
             return False
         
-        if not packet[4] in ['R' , 'B' , 'N' , 'K' , 'S']:
+        if not packet[4] in ['R' , 'B' , 'N' , 'K' , 'S', 'F']: ##hacer caso F
             print('Error al recibir el paquete: codigo de estado erroneo')
             return False
         
