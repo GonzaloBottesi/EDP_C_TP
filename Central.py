@@ -20,7 +20,7 @@ class Central():
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)
                 for telefono in lector_csv:
-                    telefonos[telefono[7]]=Telefono(telefono[0],telefono[1],telefono[2],telefono[3],
+                    telefonos[telefono[0]]=Telefono(telefono[0],telefono[1],telefono[2],telefono[3],
                                                     telefono[4],telefono[5],telefono[6],telefono[7])      
             print("Todos los teléfonos han sido registrados desde el archivo CSV.")
             return telefonos
@@ -147,8 +147,8 @@ santi = Telefono(2,'Santi', 'S22', 'Android', '3.0.0', '16 G', '256 G', '1122857
 gonza = Telefono(3,'Gonza', 'S22', 'Android', '3.0.0', '16 G', '256 G', '1159369841')
 
 ##El numero como clave porque no se va a repetir / no se deberia repetir para la central
-test.telefonos.update({santi.numero : santi,
-                       gonza.numero : gonza})
+test.telefonos.update({santi.id : santi,
+                       gonza.id : gonza})
 
 
 gonza.encendido = True

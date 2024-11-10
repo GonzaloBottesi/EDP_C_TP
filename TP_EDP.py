@@ -176,7 +176,7 @@ class FabricaDeTelefonos:
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)  # Saltar encabezados
                 for telefono in lector_csv:
-                    telefonos[telefono[7]] = Telefono(telefono[0], telefono[1], telefono[2], telefono[3],
+                    telefonos[telefono[0]] = Telefono(telefono[0], telefono[1], telefono[2], telefono[3],
                                                        telefono[4], telefono[5], int(telefono[6]), telefono[7]) #ver cuales son ints
                   
             print("Todos los teléfonos han sido registrados desde el archivo CSV.")
@@ -230,10 +230,10 @@ class FabricaDeTelefonos:
     def elegir_telefono(self):
         self.showPhones()
         if self.telefonos:
-            number = input('Ingrese el numero del celular que quiere usar: ')
-            while number not in self.telefonos:
-                number = input('No existe ese numero\nIngrese el numero del celular que quiere usar: ')
-            return self.telefonos[number]
+            idnumber = input('Ingrese el ID del celular que quiere usar: ')
+            while idnumber not in self.telefonos:
+                idnumber = input('No existe esa ID\nIngrese el numero del celular que quiere usar: ')
+            return self.telefonos[idnumber]
         else:
             print('No hay telefonos creados ')
     
