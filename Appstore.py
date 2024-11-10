@@ -33,35 +33,26 @@ class AppStore (Aplicacion):
                 usefulData[0] = usefulData[0][1:]
                 usefulData[1] = usefulData[1][1:]
                 usefulData[2] = usefulData[2][1:]
-                
                 usefulData[2] = self.filterVersionList(usefulData[2])
                 
                 for i in range(len(usefulData[1])): ##Ver que hacer con los pesos que "varian segun device"
-
                     usefulData[1][i] = self.tamanio_a_bytes(usefulData[1][i])
                 
                 return usefulData
         except FileNotFoundError:
             print ('El archivo no existe')
-        
-    
-        
+  
     def installApp (self, tel : ConfigParameters, telAppList : dict, nombre):
-        
         """
         Instala la aplicacion dado el nombre
-        
         Args:
             tel: Instancia de ConfigParameters del telefono
             nombre: Nombre de la aplicación
             telAppList: Diccionario del telefono donde instalar la app
-            
         Notes:
             Cuidado con las instancias que se pasan, asi se evita
             instalar en un telefono incorrecto
          """
-        
-        
         if not isinstance(tel, ConfigParameters):       #Busca si se paso una clase incorrecta
             raise TypeError("Clase Incorrecta")
         
@@ -80,18 +71,14 @@ class AppStore (Aplicacion):
                 i += 1
             peso = self.listaAppsDisponibles[1][i]
             version = self.listaAppsDisponibles[2][i]
-            
             if tel.almacenamiento < peso:
                 print('Espacio insuficiente')
                 return None          
-            
             if not self.compareVersions(tel.version, version):
                 print ('Posee un OS mas antiguo que el minimo')
                 return None
-            
             telAppList.update({nombre : Aplicacion(peso)})
-            tel.almacenamiento -= peso
-            
+            tel.almacenamiento -= peso 
         else:
             print("No existe esa aplicacion en la tienda")
 
@@ -105,11 +92,9 @@ class AppStore (Aplicacion):
                 telAppList.pop(nombre)
             else:
                 print("Aplicacion no instalada")
-     
         else:
             raise TypeError ("Clase Incorrecta")
-    
-    
+
     @staticmethod
     def filterVersionList (versionList : list):
         
@@ -132,7 +117,6 @@ class AppStore (Aplicacion):
     @staticmethod
     def compareVersions (ver1 : str, ver2 : str):
         """Compara que ver1 >= ver2
-
         Args:
             ver1 (str): Version del telefono
             ver2 (str): Version minima de la app
@@ -140,7 +124,6 @@ class AppStore (Aplicacion):
         if ver2 == '':
             return True
         
-
         ver1 = ver1.split('.')
         ver2 = ver2.split('.')
         
@@ -151,16 +134,11 @@ class AppStore (Aplicacion):
         
         if ver1[0] < ver2[0]:
             return False
-        
         elif (ver1[0] == ver2[0]):
-            
             if (ver1[1] < ver2[1]):
                 return False
-            
             elif (ver1[1] == ver2[1]):
-                
                 if ver1[2] < ver2[2]:
                     return False
         
-            
         return True

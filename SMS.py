@@ -9,24 +9,18 @@ class SMS (Aplicacion):
     def sendMessage(self, telNumber : str):
         
         """Arma el paquete de datos que envia a la central
-
         Args:
             telNumber: numero del telefono emisor
-        
         Returns:
             Packet: _Paquete de datos con orden ['SMS', Nro. Origen, Nro. Destino, Fecha y hora, Mensaje, Nombre (Si esta en contactos) / APODO]_
         """        
         
         destiny = input('Ingrese el numero del destinatario: ')
         message = input('Ingrese el mensaje:')
-        
         packet = ['SMS', telNumber , destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , message]
-        
         return packet
     
     def receiveMessage (self, packet):
-        
-        #Falta codear el manejo de un paquete de error
         """Recibe el mensaje y lo coloca en la bandeja de entrada
 
         Raises:
@@ -37,7 +31,6 @@ class SMS (Aplicacion):
         Returns:
             False: En caso de que el paquete no sea un mensaje SMS
         """        
-        
         if not isinstance(packet, list):
             raise TypeError ("Error en el tipo del paquete")
         
@@ -51,8 +44,7 @@ class SMS (Aplicacion):
         for i in packet:
             if not isinstance(i, str):
                 raise ValueError(f"Error en el dato {i} del paquete")
-            
-        
+
         if len(packet) == 6: ##Tiene un apodo / esta en contactos (OPCIONAL, NO IMPLEMENTADO)
             header = packet[5] + ',' + packet[3]
         else:
@@ -69,9 +61,8 @@ class SMS (Aplicacion):
         """Borra el mensaje, define si borra por numero de mensaje o por contenido del encabezado
         """        
         options = ['Y', 'N']
-        
-        choice = input('Quiere borrar multiples mensajes (Y/N)').upper()
-        
+        choice = input('Quiere borrar multiples mensajes (Y/N)')
+        choice = choice.upper(choice)
         if not choice in options:
             print ('Error, por favor ingrese una opcion correcta')
           
@@ -119,9 +110,7 @@ class SMS (Aplicacion):
         ##El paginado se deja como extra en caso de que haya tiempo
         
         number = 1
-        
         for header,message in self.bandeja.items():
             print(f'{number}. {header}: {message}')
             number += 1
-            
         return number

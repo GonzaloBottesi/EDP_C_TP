@@ -1,5 +1,6 @@
 #pruebaaaaaaa a ver si funciona
 # MAIN
+import datetime
 from TP_EDP import *
 from Central import Central
 ##from funciones_auxiliares import *
@@ -9,9 +10,7 @@ from Config import Config
 from Contactos import Contactos
 from Mail import Mail
 from SMS import SMS
-from Stack import *
 from DataAnalysis import DataAnalysis
-import datetime
 #crear_archivo_no_existe('telefonos.csv',['ID','NOMBRE','MODELO','OS','VERSION','RAM','ALMACENAMIENTO','NUMERO']) #crearlo las veces que sea neceario (es decir las veces que se usan archivos)
 
 central = Central()
@@ -21,16 +20,21 @@ fabrica_de_telefonos = FabricaDeTelefonos()
 
 
 def menu1():
-    match input('¿Qué quiere hacer con el menu\n1. Ir a la central de Telefonos\n2. Ir a la fabrica de telefonos\n3. Ver el analisis de Play Store Data\n4. Salir\n '):
-        case '1':
-            menu_central_de_telefonos()
-            
-        case '2':
-            menu_fabrica_de_telefonos()
-        case '3':
-            menu_data_analysis()
-        case '4':
-            print('Salir')
+    salir = False
+    while not salir:
+        match input('¿Qué quiere hacer con el menu\n1. Ir a la central de Telefonos\n2. Ir a la fabrica de telefonos\n3. Ver el analisis de Play Store Data\n4. Salir\n '):
+            case '1':
+                menu_central_de_telefonos()
+                
+            case '2':
+                menu_fabrica_de_telefonos()
+            case '3':
+                menu_data_analysis()
+            case '4':
+                salir = True
+                print('Salir')
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
 
 def menu_data_analysis():
     analysis = DataAnalysis()
@@ -57,14 +61,16 @@ def menu_central_de_telefonos():
         match input('¿Qué quiere hacer en la Central?\n1. Registrar un telefono\n2. Dar de baja un telefono\n3. Salir\n '):
             case '1':
                 mostrar_lista_telefonos(lista_telefonos)
-                id = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
-                central.registrar_telefono(lista_telefonos[id])
+                key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
+                central.registrar_telefono(lista_telefonos[key])
             case '2':
                 mostrar_lista_telefonos(lista_telefonos)
-                id = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
-                central.eliminar_dispositivo(lista_telefonos[id])
+                key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
+                central.eliminar_dispositivo(lista_telefonos[key])
             case '3':
                 salir = True
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
     menu1()
 
 def menu_fabrica_de_telefonos():
@@ -76,9 +82,9 @@ def menu_fabrica_de_telefonos():
                 lista_telefonos.update(newPhoneEntry)
                 #menu_fabrica_de_telefonos()
             case '2':
-                id = fabrica_de_telefonos.eliminar_telefono() # Volver al menú
+                key = fabrica_de_telefonos.eliminar_telefono() # Volver al menú
                 if id is not False:
-                    lista_telefonos.pop(id)
+                    lista_telefonos.pop(key)
                 #menu_fabrica_de_telefonos()
             case '3':
                 telefono = fabrica_de_telefonos.elegir_telefono()
@@ -182,9 +188,9 @@ def menu_llamadas(telefono : Telefono):
                 telefono.aplicacionActual.getCallHistory()
             case '5':
                 salir = True
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
     #menu_telefono_prendido(telefono)
-    
-    pass
 
 def menu_contactos(telefono: Telefono):
     salir = False
@@ -207,6 +213,8 @@ def menu_contactos(telefono: Telefono):
                 telefono.aplicacionActual.deleteContact(name)
             case '4':
                 salir = True
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
     #menu_telefono_prendido(telefono)
             
 def menu_mail(telefono: Telefono):
@@ -222,6 +230,8 @@ def menu_mail(telefono: Telefono):
             case '3':
                 salir = True
                 #menu_telefono(telefono)
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
     
 def menu_sms(telefono : Telefono):
     mensaje_ejemplo = ['SMS', '1123456789' , telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , 'Mensaje de ejemplo']
@@ -238,7 +248,9 @@ def menu_sms(telefono : Telefono):
                 telefono.aplicacionActual.eraseMessage()
             case '5':
                 salir = True
-    menu_telefono_prendido(telefono)
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
+    #menu_telefono_prendido(telefono)
     
 def menu_appstore(telefono: Telefono):
     salir = False
@@ -258,7 +270,9 @@ def menu_appstore(telefono: Telefono):
                 telefono.aplicacionActual.uninstallApp(telefono.configParameters,telefono.listaApps,name)
             case '3':
                 salir = True
-    menu_telefono_prendido(telefono)
+            case other:
+                print('Error, por favor ingrese una opcion valida \n')
+    #menu_telefono_prendido(telefono)
     
 def menu_config(telefono: Telefono):
     salir = False
@@ -294,10 +308,10 @@ def menu_config(telefono: Telefono):
                     #menu_telefono_prendido(telefono)
                     
                 case other:
-                    pass
+                    print('Error, por favor ingrese una opcion valida \n')
         else:
             salir = True
-    menu_telefono_prendido(telefono)
+    #menu_telefono_prendido(telefono)
 
 def mostrar_lista_telefonos(telefonos : dict):
     

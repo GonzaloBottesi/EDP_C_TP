@@ -14,7 +14,6 @@ class Config(Aplicacion):
     
     def changePassword(self, tel : ConfigParameters): ##Hay que pasarle el telefono sobre el que esta actuando
         
-        
         if not isinstance(tel, ConfigParameters):
             raise TypeError ("Clase incorrecta")
         
@@ -36,7 +35,6 @@ class Config(Aplicacion):
         
     def setName (self, tel : ConfigParameters):
         
-        
         if not isinstance(tel, ConfigParameters):
             raise TypeError ("Clase incorrecta")
         
@@ -54,16 +52,13 @@ class Config(Aplicacion):
         
         if isinstance(tel, ConfigParameters):
             tel.red = not tel.red
-
         else:
             raise TypeError ("Clase incorrecta")
 
     def datos(self, tel : ConfigParameters):
-
-
+        
         if isinstance(tel, ConfigParameters):
             tel.datos = not tel.datos
-
         else:
             raise TypeError ("Clase incorrecta")
 

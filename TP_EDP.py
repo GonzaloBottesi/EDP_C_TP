@@ -101,6 +101,9 @@ class Telefono:
             i += 1
             
         selectedApp = input('Escriba el nombre de la aplicacion')
+        
+        while selectedApp not in nameList:
+            selectedApp = input('Error, por favor escriba el nombre tal como aparece en pantalla')
             
         
         self.aplicacionActual = self.listaApps.get(selectedApp)

@@ -6,4 +6,3 @@ class ConfigParameters:
         self.red = red
         self.almacenamiento = almacenamiento
         self.version = version
-        

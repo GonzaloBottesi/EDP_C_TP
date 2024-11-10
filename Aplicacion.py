@@ -12,13 +12,10 @@ class Aplicacion:
     def tamanio_a_bytes(tamanio_formateado):
         
         """Convierte una cadena de tamaño formateado (ej. "117.74 MB") a su valor en bytes.
-
         Args:
             tamanio_formateado (str): Tamaño en formato de cadena con sufijo (ej. "1.5 GB").
-
         Returns:
             int: El tamaño convertido a bytes.
-
         Raises:
             ValueError: Si el formato de entrada no es válido.
         """        
@@ -45,6 +42,3 @@ class Aplicacion:
 
         # Si no hay sufijo (es decir, el valor está en bytes), convertir directamente
         return int(float(tamanio_formateado))
-
-
-########## Metodo tambien esta en TP_EDP (en la clase telefono)

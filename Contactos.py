@@ -23,7 +23,7 @@ class Contactos(Aplicacion):
         try:
             self.listaContactos.pop(name)
         except KeyError:
-            print ("Error, no existe un contacto con ese nombre")
+            print ("Error, se encuentra un contacto con ese nombre")
             return 0
     
     def updateContact (self, name, value):

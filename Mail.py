@@ -9,13 +9,11 @@ class Mail(Aplicacion):
         super().__init__(peso)
         crear_archivo_no_existe('mails.csv',['ID','DE','PARA','FECHA','MENSAJE','LECTURA'])
         self.mails=self.extraer_archivo('mails.csv')
-        
-
-        
+     
     def extraer_archivo(self, archivo_csv):
         mails = {0:['-','-','-','Bienvenido a Mails','Leido']}
         try:
-            with open(archivo_csv, mode='r', newline='') as archivo:
+            with open(archivo_csv, mode='r', newline='', encoding= 'utf-8') as archivo:
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)  # Saltar encabezados
                 for mail in lector_csv:
@@ -41,16 +39,17 @@ class Mail(Aplicacion):
        
     def ver_mail_por_no_leidos(self):
         lista_enlazada_ordenada = ListaEnlazada()
-        for clave,valor in self.mails:
-            if valor[1]== 'hola': #hola seria el id del telefono en USO que quiere ver sus mails
-                if valor[4].strip().lower() == 'no leido':  # Comparación insensible a mayúsculas
-                    lista_enlazada_ordenada.add_to_end(valor)
         
-        for clave,valor in self.mails:
-            if valor[1]== 'hola': #hola seria el id del telefono en USO que quiere ver sus mails
-                if valor[4].strip().lower() == 'leido':  # Comparación insensible a mayúsculas
-                    lista_enlazada_ordenada.add_to_end(valor)
+        # Primero agregamos los correos "No Leídos"
+        for mail in self.mails:
+            if self.mails[mail][4].strip().lower() == 'no leido':  # Comparación insensible a mayúsculas
+                lista_enlazada_ordenada.add_to_end(self.mails[mail])
         
+        # Luego agregamos los correos "Leídos"
+        for mail in self.mails:
+            if self.mails[mail][4].strip().lower() == 'leido':  # Comparación insensible a mayúsculas
+                lista_enlazada_ordenada.add_to_end(self.mails[mail])
+                
         for mail in lista_enlazada_ordenada:
             print(mail)
                 
@@ -76,8 +75,4 @@ class Mail(Aplicacion):
     ["Invitación al Evento", "2024-10-22", "Leído", 18],
     ["Actualización de Seguridad", "2024-10-25", "No leído", 2],
     ["Nuevo Protocolo", "2024-10-28", "Leído", 9]]
-    viejo self.mail() si es muy dificil, se vuelve a esto'''       
-        
-        
-        
- 
+    viejo self.mail() si es muy dificil, se vuelve a esto'''
