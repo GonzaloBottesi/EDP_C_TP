@@ -83,7 +83,7 @@ class SMS (Aplicacion):
         else:
             toErase = input('Ingrese el numero del mensaje')
         
-            if toErase.isdigit() and toErase <= qty:
+            if toErase.isdigit() and int(toErase) <= qty:
                 self.eraseMessageSingle(int(toErase) - 1)
             else:
                 print('Error: no existe el mensaje')

@@ -1,5 +1,6 @@
+import csv
 from Aplicacion import Aplicacion
-from funciones_auxiliares import *
+from funciones_auxiliares import crear_archivo_no_existe, ListaEnlazada
 from datetime import datetime
 
 class Mail(Aplicacion):

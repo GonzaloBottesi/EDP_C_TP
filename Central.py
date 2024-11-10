@@ -141,7 +141,7 @@ class Central():
             return packet
 
 
-'''       PRUEBAS    
+'''       PRUEBA DE LLAMADA, RECEPCION Y CORTE   
 test = Central()
 
 santi = Telefono(2,'Santi', 'S22', 'Android', '3.0.0', '16 G', '256 G', '1122857835')
