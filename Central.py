@@ -20,7 +20,7 @@ class Central():
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)
                 for telefono in lector_csv:
-                    telefonos[telefono[0]]=Telefono(telefono[0],telefono[1],telefono[2],telefono[3],
+                    telefonos[telefono[7]]=Telefono(telefono[0],telefono[1],telefono[2],telefono[3],
                                                     telefono[4],telefono[5],telefono[6],telefono[7])      
             print("Todos los teléfonos han sido registrados desde el archivo CSV.")
             return telefonos
@@ -32,18 +32,18 @@ class Central():
             print(f"Se produjo un error al leer el archivo CSV: {e}")
 
     def eliminar_dispositivo(self,telefono:Telefono):
-        if telefono.id in self.telefonos:
-            self.telefonos.pop(telefono.id)
-            print (f"Se elimino el telefono con el id {telefono.id}")
+        if telefono.numero in self.telefonos:
+            self.telefonos.pop(telefono.numero)
+            print (f"Se elimino el telefono con el numero {telefono.numero}")
         else:
-            print (f"No se encuentra registrado el telefono con el numero {telefono.id}")
+            print (f"No se encuentra registrado el telefono con el numero {telefono.numero}")
         
     def registrar_telefono(self, telefono:Telefono):
-        if telefono.id not in self.telefonos: 
-            self.telefonos.update({telefono.id : telefono})
-            print (f"Se registro el telefono con el id {telefono.id}")
+        if telefono.numero not in self.telefonos: 
+            self.telefonos.update({telefono.numero : telefono})
+            print (f"Se registro el telefono con el numero {telefono.numero}")
         else:
-            print (f"Ya se encuentra registrado el telefono con el numero {telefono.id}")
+            print (f"Ya se encuentra registrado el telefono con el numero {telefono.numero}")
     
     
     def verificar_disponibilidad_de_red(self, numero):
@@ -139,7 +139,6 @@ class Central():
             delta = time2 - time1
             self.registro_llamadas.update({header : 'Duracion: ' + str(delta)})
             return packet
-
 
 '''       PRUEBA DE LLAMADA, RECEPCION Y CORTE   
 test = Central()

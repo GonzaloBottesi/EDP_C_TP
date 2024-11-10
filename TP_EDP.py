@@ -151,7 +151,7 @@ class Telefono:
         return int(float(tamanio_formateado))
 
     def __str__(self) -> str:
-        string = f'Telefono de {self.nombre}; Num: {self.numero} ; Modelo {self.modelo}'
+        string = f'{self.modelo} de {self.nombre}; Num: {self.numero}'
         return string
     
     
@@ -176,7 +176,7 @@ class FabricaDeTelefonos:
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)  # Saltar encabezados
                 for telefono in lector_csv:
-                    telefonos[telefono[0]] = Telefono(telefono[0], telefono[1], telefono[2], telefono[3],
+                    telefonos[telefono[7]] = Telefono(telefono[0], telefono[1], telefono[2], telefono[3],
                                                        telefono[4], telefono[5], int(telefono[6]), telefono[7]) #ver cuales son ints
                   
             print("Todos los teléfonos han sido registrados desde el archivo CSV.")
@@ -217,13 +217,23 @@ class FabricaDeTelefonos:
         else:
             print('No hay telefonos creados')
             return False
+    
+    def showPhones(self):
+        print('Los telefonos en la fabrica son los siguientes:\n')
+        i = 1
+        for phone in self.telefonos.values():
+            print(f'{i}. {phone}')
+            i += 1
+        return True
+            
      
     def elegir_telefono(self):
+        self.showPhones()
         if self.telefonos:
-            id = input('Ingrese el ID del celular que quiere usar: ')
-            while id not in self.telefonos:
-                id = input('No existe ese ID\nIngrese el ID del celular que quiere usar: ')
-            return self.telefonos[id]
+            number = input('Ingrese el numero del celular que quiere usar: ')
+            while number not in self.telefonos:
+                number = input('No existe ese numero\nIngrese el numero del celular que quiere usar: ')
+            return self.telefonos[number]
         else:
             print('No hay telefonos creados ')
     
