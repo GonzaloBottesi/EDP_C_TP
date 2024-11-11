@@ -66,6 +66,9 @@ class Llamadas(Aplicacion):
                 self.callHistory.update({header : 'En curso'})
                 packet[4] = 'K'
                 return packet
+        elif packet[4] == 'F':
+            header = packet[1] + '-' + packet[3]
+            self.callHistory.update({header : 'Rechazada'})
            
     def endCallRequest (self, tel1 : str):
         
