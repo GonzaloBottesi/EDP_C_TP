@@ -32,18 +32,18 @@ class Central():
             print(f"Se produjo un error al leer el archivo CSV: {e}")
 
     def eliminar_dispositivo(self,telefono:Telefono):
-        if telefono.numero in self.telefonos:
-            self.telefonos.pop(telefono.numero)
-            print (f"Se elimino el telefono con el numero {telefono.numero}")
+        if telefono.id in self.telefonos:
+            self.telefonos.pop(telefono.id)
+            print (f"Se elimino el telefono con el id {telefono.id}")
         else:
-            print (f"No se encuentra registrado el telefono con el numero {telefono.numero}")
+            print (f"No se encuentra registrado el telefono con el id {telefono.id}")
         
     def registrar_telefono(self, telefono:Telefono):
-        if telefono.numero not in self.telefonos: 
-            self.telefonos.update({telefono.numero : telefono})
-            print (f"Se registro el telefono con el numero {telefono.numero}")
+        if telefono.id not in self.telefonos: 
+            self.telefonos.update({telefono.id : telefono})
+            print (f"Se registro el telefono con el id {telefono.id}")
         else:
-            print (f"Ya se encuentra registrado el telefono con el numero {telefono.numero}")
+            print (f"Ya se encuentra registrado el telefono con el id {telefono.id}")
     
     
     def verificar_disponibilidad_de_red(self, numero):

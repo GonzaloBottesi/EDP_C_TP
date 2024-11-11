@@ -60,18 +60,22 @@ def menu_central_de_telefonos():
     while not salir:
         match input('¿Qué quiere hacer en la Central?\n1. Registrar un telefono\n2. Dar de baja un telefono\n3. Salir\n '):
             case '1':
-                mostrar_lista_telefonos(lista_telefonos)
+                mostrar_lista_telefonos(fabrica_de_telefonos.telefonos)
                 key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
-                central.registrar_telefono(lista_telefonos[key])
+                while key not in fabrica_de_telefonos.telefonos:
+                    key = input('Por favor, ingrese un numero valido: ')
+                central.registrar_telefono(fabrica_de_telefonos.telefonos[key])
             case '2':
-                mostrar_lista_telefonos(lista_telefonos)
+                mostrar_lista_telefonos(fabrica_de_telefonos.telefonos)
                 key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
-                central.eliminar_dispositivo(lista_telefonos[key])
+                while key not in fabrica_de_telefonos.telefonos:
+                    key = input('Por favor, ingrese un numero valido: ')
+                central.eliminar_dispositivo(fabrica_de_telefonos.telefonos[key])
             case '3':
                 salir = True
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
-    menu1()
+    #menu1()
 
 def menu_fabrica_de_telefonos():
     salir = False
@@ -83,7 +87,7 @@ def menu_fabrica_de_telefonos():
                 #menu_fabrica_de_telefonos()
             case '2':
                 key = fabrica_de_telefonos.eliminar_telefono() # Volver al menú
-                if id is not False:
+                if key is not False:
                     lista_telefonos.pop(key)
                 #menu_fabrica_de_telefonos()
             case '3':
@@ -105,7 +109,7 @@ def menu_fabrica_de_telefonos():
                 print('Esta opción no está disponible en este momento')
                 #menu_fabrica_de_telefonos()
 
-    menu1()
+    #menu1()
 
 def menu_telefono(telefono: Telefono): 
     salir = False
