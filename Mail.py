@@ -1,0 +1,55 @@
+import csv
+from Aplicacion import Aplicacion
+from funciones_auxiliares import crear_archivo_no_existe, ListaEnlazada
+from datetime import datetime
+
+class Mail(Aplicacion):
+    
+    def __init__(self, peso):
+        super().__init__(peso)
+        crear_archivo_no_existe('mails.csv',['ID','DE','PARA','FECHA','MENSAJE','LECTURA'])
+        self.mails=self.extraer_archivo('mails.csv')
+     
+    def extraer_archivo(self, archivo_csv):
+        mails = {0:['-','-',datetime(2024,1,1).strftime("%Y-%m-%d"),'Bienvenido a Mails','Leido']}
+        try:
+            with open(archivo_csv, mode='r', newline='', encoding= 'utf-8') as archivo:
+                lector_csv = csv.reader(archivo)
+                next(lector_csv)  # Saltar encabezados
+                for mail in lector_csv:
+                    mails[int(mail[0])] = (mail[1],mail[2],mail[3],mail[4],mail[5])
+            print("Todos los mails han sido registrados desde el archivo CSV.")
+            return mails
+        except FileNotFoundError:
+            print("El archivo CSV no fue encontrado.")
+        except KeyError as e:
+            print(f"Error en el archivo CSV. Faltan columnas: {e}")
+        except Exception as e:
+            print(f"Se produjo un error al leer el archivo CSV: {e}")
+       
+    def ver_mail_por_no_leidos(self):
+        lista_enlazada_ordenada = ListaEnlazada()
+        
+        # Primero agregamos los correos "No Leídos"
+        for mail in self.mails:
+            if self.mails[mail][4].strip().lower() == 'no leido':  # Comparación insensible a mayúsculas
+                lista_enlazada_ordenada.add_to_end(self.mails[mail])
+        
+        # Luego agregamos los correos "Leídos"
+        for mail in self.mails:
+            if self.mails[mail][4].strip().lower() == 'leido':  # Comparación insensible a mayúsculas
+                lista_enlazada_ordenada.add_to_end(self.mails[mail])
+                
+        for mail in lista_enlazada_ordenada:
+            print(mail)
+                
+    def ver_mail_por_fecha(self): #value seria el mail
+        
+        
+        lista_enlazada_desc = sorted(
+        [value for value in self.mails.values()],
+        key=lambda x: datetime.strptime(x[2],"%Y-%m-%d"),  
+        reverse=True
+    )
+        for mail in lista_enlazada_desc:
+            print(mail)
