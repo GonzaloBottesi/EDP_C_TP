@@ -8,9 +8,9 @@ class Mail(Aplicacion):
     def __init__(self, peso):
         super().__init__(peso)
         crear_archivo_no_existe('mails.csv',['ID','DE','PARA','FECHA','MENSAJE','LECTURA'])
-        self.mails=self.extraer_archivo('mails.csv')
+        self.mails=self.extractFile('mails.csv')
      
-    def extraer_archivo(self, archivo_csv):
+    def extractFile(self, archivo_csv):
         mails = {0:['-','-',datetime(2024,1,1).strftime("%Y-%m-%d"),'Bienvenido a Mails','Leido']}
         try:
             with open(archivo_csv, mode='r', newline='', encoding= 'utf-8') as archivo:
@@ -27,29 +27,29 @@ class Mail(Aplicacion):
         except Exception as e:
             print(f"Se produjo un error al leer el archivo CSV: {e}")
        
-    def ver_mail_por_no_leidos(self):
-        lista_enlazada_ordenada = ListaEnlazada()
+    def sortMailByUnread(self):
+        sortedLinkedList = ListaEnlazada()
         
         # Primero agregamos los correos "No Leídos"
         for mail in self.mails:
             if self.mails[mail][4].strip().lower() == 'no leido':  # Comparación insensible a mayúsculas
-                lista_enlazada_ordenada.add_to_end(self.mails[mail])
+                sortedLinkedList.add_to_end(self.mails[mail])
         
         # Luego agregamos los correos "Leídos"
         for mail in self.mails:
             if self.mails[mail][4].strip().lower() == 'leido':  # Comparación insensible a mayúsculas
-                lista_enlazada_ordenada.add_to_end(self.mails[mail])
+                sortedLinkedList.add_to_end(self.mails[mail])
                 
-        for mail in lista_enlazada_ordenada:
+        for mail in sortedLinkedList:
             print(mail)
                 
-    def ver_mail_por_fecha(self): #value seria el mail
+    def sortMailByDate(self): #value seria el mail
         
         
-        lista_enlazada_desc = sorted(
+        descendingLinkedList = sorted(
         [value for value in self.mails.values()],
         key=lambda x: datetime.strptime(x[2],"%Y-%m-%d"),  
         reverse=True
     )
-        for mail in lista_enlazada_desc:
+        for mail in descendingLinkedList:
             print(mail)

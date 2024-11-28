@@ -158,7 +158,7 @@ class Telefono:
 class FabricaDeTelefonos:
     def __init__(self):
         self.crear_archivo_no_existe('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
-        self.telefonos = self.extraer_archivo('telefonos.csv')
+        self.telefonos = self.extractFile('telefonos.csv')
 
     def crear_archivo_no_existe(self, archivo, filas_iniciales): # ESTA EN FUNCIONES AUXILIARES
         try:
@@ -169,7 +169,7 @@ class FabricaDeTelefonos:
         except FileExistsError:
             return
   
-    def extraer_archivo(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
+    def extractFile(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
         telefonos = dict()
         try:
             with open(archivo_csv, mode='r', newline='', encoding='utf-8') as archivo:
@@ -188,7 +188,7 @@ class FabricaDeTelefonos:
         except Exception as e:
             print(f"Se produjo un error al leer el archivo CSV: {e}")
 
-    def crear_telefono(self):
+    def createPhone(self):
         id = input('Ingrese el ID de su teléfono: ')
         while id in self.telefonos or not id.isdigit():
             id = input('Error en la introducción del ID\nIngrese el ID de su teléfono:')
@@ -207,7 +207,7 @@ class FabricaDeTelefonos:
         self.telefonos[id] = telefono
         return {telefono.id : telefono}
         
-    def eliminar_telefono(self):
+    def erasePhone(self):
         if self.telefonos:
             id = input('Ingrese el ID del celular que quiere eliminar: ')
             while id not in self.telefonos:
@@ -227,7 +227,7 @@ class FabricaDeTelefonos:
         return True
             
      
-    def elegir_telefono(self):
+    def choosePhone(self):
         self.showPhones()
         if self.telefonos:
             idnumber = input('Ingrese el ID del celular que quiere usar: ')
@@ -237,12 +237,12 @@ class FabricaDeTelefonos:
         else:
             print('No hay telefonos creados ')
     
-    def actualizar_archivos(self): # ESTA EN FUNCIONES AUXILIARES
+    def updateFiles(self): # ESTA EN FUNCIONES AUXILIARES
         with open('telefonos.csv', 'w', encoding='utf-8', newline='') as archivo:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
             for telefono in self.telefonos.values():
-                escritor.writerow([telefono.id, telefono.configParameters.nombre, telefono.modelo, telefono.os,
+                escritor.writerow([telefono.id, telefono.configParameters.name, telefono.modelo, telefono.os,
                                    telefono.configParameters.version, telefono.ram, telefono.configParameters.almacenamiento, telefono.numero])
     
 

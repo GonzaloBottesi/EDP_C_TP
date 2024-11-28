@@ -24,19 +24,19 @@ def menu1():
     while not salir:
         match input('¿Qué quiere hacer con el menu\n1. Ir a la central de Telefonos\n2. Ir a la fabrica de telefonos\n3. Ver el analisis de Play Store Data\n4. Salir\n '):
             case '1':
-                menu_central_de_telefonos()
+                phoneCentralMenu()
                 
             case '2':
-                menu_fabrica_de_telefonos()
+                phoneFactoryMenu()
             case '3':
-                menu_data_analysis()
+                dataAnalysisMenu()
             case '4':
                 salir = True
                 print('Salir')
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
 
-def menu_data_analysis():
+def dataAnalysisMenu():
     analysis = DataAnalysis()
     salir = False
     while not salir:
@@ -55,63 +55,63 @@ def menu_data_analysis():
                 
 
 
-def menu_central_de_telefonos():
+def phoneCentralMenu():
     salir = False
     while not salir:
         match input('¿Qué quiere hacer en la Central?\n1. Registrar un telefono\n2. Dar de baja un telefono\n3. Salir\n '):
             case '1':
-                mostrar_lista_telefonos(fabrica_de_telefonos.telefonos)
+                showPhoneList(fabrica_de_telefonos.telefonos)
                 key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
                 while key not in fabrica_de_telefonos.telefonos:
                     key = input('Por favor, ingrese un numero valido: ')
-                central.registrar_telefono(fabrica_de_telefonos.telefonos[key])
+                central.registerDevice(fabrica_de_telefonos.telefonos[key])
             case '2':
-                mostrar_lista_telefonos(fabrica_de_telefonos.telefonos)
+                showPhoneList(fabrica_de_telefonos.telefonos)
                 key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
                 while key not in fabrica_de_telefonos.telefonos:
                     key = input('Por favor, ingrese un numero valido: ')
-                central.eliminar_dispositivo(fabrica_de_telefonos.telefonos[key])
+                central.eraseDevice(fabrica_de_telefonos.telefonos[key])
             case '3':
                 salir = True
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
     #menu1()
 
-def menu_fabrica_de_telefonos():
+def phoneFactoryMenu():
     salir = False
     while not salir:
         match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
             case '1':
-                newPhoneEntry = fabrica_de_telefonos.crear_telefono()  # Volver al menú
+                newPhoneEntry = fabrica_de_telefonos.createPhone()  # Volver al menú
                 lista_telefonos.update(newPhoneEntry)
-                #menu_fabrica_de_telefonos()
+                #phoneFactoryMenu()
             case '2':
-                key = fabrica_de_telefonos.eliminar_telefono() # Volver al menú
+                key = fabrica_de_telefonos.erasePhone() # Volver al menú
                 if key is not False:
                     lista_telefonos.pop(key)
-                #menu_fabrica_de_telefonos()
+                #phoneFactoryMenu()
             case '3':
-                telefono = fabrica_de_telefonos.elegir_telefono()
+                telefono = fabrica_de_telefonos.choosePhone()
                 if isinstance(telefono, Telefono):
                     lista_telefonos.update({telefono.id : telefono})
                     telefono.powerButton() # Al entrar al menu se prende solo el celular
                     print('Telefono encendido')
-                    menu_telefono(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
+                    phoneMenu(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
                 else:
                     pass
-                   # menu_fabrica_de_telefonos()
+                   # phoneFactoryMenu()
             case '4':
                 salir = True
                 print('Salir')
-                fabrica_de_telefonos.actualizar_archivos()
+                fabrica_de_telefonos.updateFiles()
                 #menu1()
             case other:
                 print('Esta opción no está disponible en este momento')
-                #menu_fabrica_de_telefonos()
+                #phoneFactoryMenu()
 
     #menu1()
 
-def menu_telefono(telefono: Telefono): 
+def phoneMenu(telefono: Telefono): 
     salir = False
     if telefono.encendido and telefono.bloqueado: # Si el celular esta bloqueado
         while not salir:
@@ -119,22 +119,22 @@ def menu_telefono(telefono: Telefono):
                 case '1':
                     password = input('Ingrese la contraseña: ')
                     if telefono.unlock(password):
-                        menu_telefono_prendido(telefono)
+                        poweredPhoneMenu(telefono)
                     else:
                         pass
-                        #menu_telefono(telefono)
+                        #phoneMenu(telefono)
                 case '2':
                     salir = True
                     telefono.Apagar()
                     telefono.lock()
                 case other:
                     print('Esta opción no está disponible')
-                    #menu_telefono(telefono)
-        #menu_fabrica_de_telefonos()
+                    #phoneMenu(telefono)
+        #phoneFactoryMenu()
     else:
         print('ERROR')
 
-def menu_telefono_prendido(telefono: Telefono):
+def poweredPhoneMenu(telefono: Telefono):
     if telefono.encendido and not telefono.bloqueado: # Si el celular esta desbloqueado
         salir = False
         while not salir:
@@ -143,38 +143,38 @@ def menu_telefono_prendido(telefono: Telefono):
                     telefono.openApp()
                     
                     if isinstance(telefono.aplicacionActual, AppStore):
-                        menu_appstore(telefono)
+                        appstoreMenu(telefono)
                         
                     elif isinstance(telefono.aplicacionActual, Config):
-                        menu_config(telefono)
+                        configMenu(telefono)
                         
                     elif isinstance(telefono.aplicacionActual, Contactos):
-                        menu_contactos(telefono)
+                        contactsMenu(telefono)
                         
                     elif isinstance(telefono.aplicacionActual, Llamadas):
-                        menu_llamadas(telefono) ##Completar dpes de hacer clase llamadas
+                        callMenu(telefono) ##Completar dpes de hacer clase llamadas
                     
                     elif isinstance(telefono.aplicacionActual, Mail):
-                        menu_mail(telefono)
+                        mailsMenu(telefono)
                         
                     elif isinstance(telefono.aplicacionActual, SMS):
-                        menu_sms(telefono)
+                        SMSMenu(telefono)
                     else:
                         print('Lo siento, de momento la aplicacion esta en desarrollo y no se puede abrir')
                 case '2':
                     telefono.Apagar()
                     telefono.lock()
                     salir = True
-                    #menu_fabrica_de_telefonos()
+                    #phoneFactoryMenu()
                     
                 case other:
                     print('Esa opción no está disponible en este momento')
-                    #menu_telefono_prendido(telefono)
+                    #poweredPhoneMenu(telefono)
     else:
         print('Algo funciona mal')
 
 
-def menu_llamadas(telefono : Telefono):
+def callMenu(telefono : Telefono):
     paquete_ejemplo = ['LLAMADA', '1123456789', telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , 'R']
     salir = False
     while not salir:
@@ -194,9 +194,9 @@ def menu_llamadas(telefono : Telefono):
                 salir = True
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
-    #menu_telefono_prendido(telefono)
+    #poweredPhoneMenu(telefono)
 
-def menu_contactos(telefono: Telefono):
+def contactsMenu(telefono: Telefono):
     salir = False
     while not salir:
         match input('''¿Qué quiere hacer en Contactos?\n1. Agregar contacto\n2. Actualizar contecto\n3. Eliminar contacto\n4.Volver\n'''):
@@ -219,25 +219,25 @@ def menu_contactos(telefono: Telefono):
                 salir = True
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
-    #menu_telefono_prendido(telefono)
+    #poweredPhoneMenu(telefono)
             
-def menu_mail(telefono: Telefono):
+def mailsMenu(telefono: Telefono):
     salir = False
     while not salir:
         match input('¿Qué quiere hacer con su Mail?\n1. Ver email por no leidos\n2. Ver email por orden de fecha\n3. Salir\n'):
             case '1':
-                telefono.aplicacionActual.ver_mail_por_no_leidos()
-                #menu_mail(telefono)
+                telefono.aplicacionActual.sortMailByUnread()
+                #mailsMenu(telefono)
             case '2':
-                telefono.aplicacionActual.ver_mail_por_fecha()
-                #menu_mail(telefono)
+                telefono.aplicacionActual.sortMailByDate()
+                #mailsMenu(telefono)
             case '3':
                 salir = True
-                #menu_telefono(telefono)
+                #phoneMenu(telefono)
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
     
-def menu_sms(telefono : Telefono):
+def SMSMenu(telefono : Telefono):
     mensaje_ejemplo = ['SMS', '1123456789' , telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , 'Mensaje de ejemplo']
     salir = False
     while not salir:
@@ -254,9 +254,9 @@ def menu_sms(telefono : Telefono):
                 salir = True
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
-    #menu_telefono_prendido(telefono)
+    #poweredPhoneMenu(telefono)
     
-def menu_appstore(telefono: Telefono):
+def appstoreMenu(telefono: Telefono):
     salir = False
     while not salir:
         match input('¿Qué quiere hacer con la AppStore?\n1. Instalar una app\n2. Desinstalar una App\n3. Volver\n'):
@@ -276,20 +276,20 @@ def menu_appstore(telefono: Telefono):
                 salir = True
             case other:
                 print('Error, por favor ingrese una opcion valida \n')
-    #menu_telefono_prendido(telefono)
+    #poweredPhoneMenu(telefono)
     
-def menu_config(telefono: Telefono):
+def configMenu(telefono: Telefono):
     salir = False
     while not salir:
         if isinstance(telefono.aplicacionActual, Config):
             match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar/Desactivar red\n4. Activar/Desactivar datos\n5. Salir\n'):
                 case '1':
                     telefono.aplicacionActual.setName(telefono.configParameters)
-                    #menu_config(telefono)
+                    #configMenu(telefono)
 
                 case '2':
                     telefono.aplicacionActual.changePassword(telefono.configParameters)
-                    #menu_config(telefono)
+                    #configMenu(telefono)
 
                 case '3':
                     telefono.aplicacionActual.red(telefono.configParameters)
@@ -297,7 +297,7 @@ def menu_config(telefono: Telefono):
                         print('Se activo la red')
                     else:
                         print('Se desactivo la red')
-                    #menu_config(telefono)
+                    #configMenu(telefono)
 
                 case '4':
                     telefono.aplicacionActual.datos(telefono.configParameters)
@@ -305,19 +305,19 @@ def menu_config(telefono: Telefono):
                         print('Se activaron los datos')
                     else:
                         print('Se desactivaron los datos')
-                    #menu_config(telefono)
+                    #configMenu(telefono)
 
                 case '5':
                     salir = True
-                    #menu_telefono_prendido(telefono)
+                    #poweredPhoneMenu(telefono)
                     
                 case other:
                     print('Error, por favor ingrese una opcion valida \n')
         else:
             salir = True
-    #menu_telefono_prendido(telefono)
+    #poweredPhoneMenu(telefono)
 
-def mostrar_lista_telefonos(telefonos : dict):
+def showPhoneList(telefonos : dict):
     
     print('Los telefonos en el programa son:')
     for key in telefonos.keys():

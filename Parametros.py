@@ -1,6 +1,6 @@
 class ConfigParameters:
     def __init__(self, nombre, password, datos, red, almacenamiento, version):
-        self.nombre = nombre
+        self.name = nombre
         self.pin = password
         self.datos = datos
         self.red = red

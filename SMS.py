@@ -4,7 +4,7 @@ import datetime
 class SMS (Aplicacion):
     def __init__(self, peso) -> None:
         super().__init__(peso)
-        self.bandeja = dict()
+        self.inbox = dict()
         
     def sendMessage(self, telNumber : str):
         
@@ -21,7 +21,7 @@ class SMS (Aplicacion):
         return packet
     
     def receiveMessage (self, packet):
-        """Recibe el mensaje y lo coloca en la bandeja de entrada
+        """Recibe el mensaje y lo coloca en la inbox de entrada
 
         Raises:
             TypeError: Salta si el paquete no es una lista
@@ -54,7 +54,7 @@ class SMS (Aplicacion):
         if message is None:
             print('El telefono no se encuentra en linea')
         else:
-            self.bandeja.update({header : message})
+            self.inbox.update({header : message})
     
     def eraseMessage(self):
         
@@ -81,26 +81,26 @@ class SMS (Aplicacion):
             
     def eraseMessageSingle(self, number):
     
-        headerList = [* self.bandeja.keys()]
-        self.bandeja.pop(headerList[number])
+        headerList = [* self.inbox.keys()]
+        self.inbox.pop(headerList[number])
         print('Mensaje eliminado exitosamente')
         return 1
     
     def eraseMessageBulk(self, header):
             
-        if not any(header in i for i in self.bandeja):
+        if not any(header in i for i in self.inbox):
             print("No existe un encabezado con esos datos")
             return 0
                 
         i = 0
         eraseList = []
-        for hd in self.bandeja:
+        for hd in self.inbox:
             if header in hd:
                 i += 1
                 eraseList.append(hd)
                 
         for erase in eraseList:
-            self.bandeja.pop(erase)
+            self.inbox.pop(erase)
             
         print(f"Se eliminaron {i} mensajes")
         return i
@@ -110,7 +110,7 @@ class SMS (Aplicacion):
         ##El paginado se deja como extra en caso de que haya tiempo
         
         number = 1
-        for header,message in self.bandeja.items():
+        for header,message in self.inbox.items():
             print(f'{number}. {header}: {message}')
             number += 1
         return number
