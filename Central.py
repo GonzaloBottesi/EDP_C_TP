@@ -87,7 +87,8 @@ class Central():
             newPacket = self.manejarLlamada(packet)
             return newPacket
         else:
-            pass ##Manejar SMS
+            newPacket = self.manejarSMS(packet)
+            return newPacket
     
     def manejarSMS (self, packet : list):
         receptor = packet[2]

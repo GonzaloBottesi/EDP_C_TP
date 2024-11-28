@@ -108,6 +108,6 @@ class Llamadas(Aplicacion):
     def getDatetimeFromHeader (header : str):
         
         header.split(',')
-        date = datetime.datetime.strptime(header[1], format = "%d/%m/%Y, %H:%M:%S")
+        date = datetime.datetime.strptime(header[1] , "%d/%m/%Y, %H:%M:%S")
         
         return date

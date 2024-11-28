@@ -51,7 +51,7 @@ class SMS (Aplicacion):
             header = packet[1] + ',' + packet[3]
         message = packet[4]
         
-        if message == None:
+        if message is None:
             print('El telefono no se encuentra en linea')
         else:
             self.bandeja.update({header : message})
@@ -62,7 +62,7 @@ class SMS (Aplicacion):
         """        
         options = ['Y', 'N']
         choice = input('Quiere borrar multiples mensajes (Y/N)')
-        choice = choice.upper(choice)
+        choice = choice.upper()
         if not choice in options:
             print ('Error, por favor ingrese una opcion correcta')
           
