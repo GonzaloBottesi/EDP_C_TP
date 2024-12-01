@@ -154,7 +154,7 @@ class Central():
             self.callLog.update({header : 'Duracion: ' + str(delta)})
             return packet
 
-'''      PRUEBA DE LLAMADA, RECEPCION Y CORTE   
+'''#      PRUEBA DE LLAMADA, RECEPCION Y CORTE   
 test = Central()
 
 santi = Telefono(2,'Santi', 'S22', 'Android', '3.0.0', '16 G', '256 G', '1122857835')
@@ -195,4 +195,6 @@ respuesta = santi.aplicacionActual.endCallRequest(santi.numero)
 respuesta2 = test.receivePakcet(respuesta)
 respuesta3 = gonza.aplicacionActual.receivePacket(respuesta2)
 
+gonza.aplicacionActual.getCallHistory()
+santi.aplicacionActual.getCallHistory()
 print('fin')'''

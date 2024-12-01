@@ -11,6 +11,7 @@ from Contactos import Contactos
 from Mail import Mail
 from SMS import SMS
 from DataAnalysis import DataAnalysis
+import Paquete as pkt
 #crear_archivo_no_existe('telefonos.csv',['ID','NOMBRE','MODELO','OS','VERSION','RAM','ALMACENAMIENTO','NUMERO']) #crearlo las veces que sea neceario (es decir las veces que se usan archivos)
 
 central = Central()
@@ -175,7 +176,8 @@ def poweredPhoneMenu(telefono: Telefono):
 
 
 def callMenu(telefono : Telefono):
-    paquete_ejemplo = ['LLAMADA', '1123456789', telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , 'R']
+    samplePacket = pkt.PaqueteLlamada('1123456789', telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , pkt.Intentions.REQUEST)
+
     salir = False
     while not salir:
         match input('''¿Qué quiere hacer en Llamadas?\n1. Llamar\n2. Atender llamada\n3. Cortar llamada\n4. Ver historial de llamadas\n5.Volver\n'''):
@@ -183,7 +185,7 @@ def callMenu(telefono : Telefono):
                 paquete_llamada = telefono.aplicacionActual.sendCallRequest(telefono.numero)
                 print(paquete_llamada)
             case '2':
-                paquete_recepcion = telefono.aplicacionActual.receivePacket(paquete_ejemplo) #Pensar en un paquete de ejemplo
+                paquete_recepcion = telefono.aplicacionActual.receivePacket(samplePacket) #Pensar en un paquete de ejemplo
                 print(paquete_recepcion)
             case '3':
                 paquete_cortar = telefono.aplicacionActual.endCallRequest(telefono.numero) ##Ingresar el numero de ejemplo
