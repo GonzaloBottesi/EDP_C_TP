@@ -1,5 +1,6 @@
 from Aplicacion import Aplicacion
 import datetime
+from Paquete import PaqueteSMS
 
 class SMS (Aplicacion):
     def __init__(self, peso) -> None:
@@ -16,11 +17,15 @@ class SMS (Aplicacion):
         """        
         
         destiny = input('Ingrese el numero del destinatario: ')
-        message = input('Ingrese el mensaje:')
-        packet = ['SMS', telNumber , destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , message]
+        message = input('Ingrese el mensaje (maximo 160 caracteres):')
+        if len(message) > 160:
+            message = message[:160]
+
+        packet = PaqueteSMS(telNumber, destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S"), message)
+        #packet = ['SMS', telNumber , destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , message]
         return packet
     
-    def receiveMessage (self, packet):
+    def receiveMessage (self, packet : PaqueteSMS):
         """Recibe el mensaje y lo coloca en la inbox de entrada
 
         Raises:
@@ -31,30 +36,15 @@ class SMS (Aplicacion):
         Returns:
             False: En caso de que el paquete no sea un mensaje SMS
         """        
-        if not isinstance(packet, list):
+        if not isinstance(packet, PaqueteSMS):
             raise TypeError ("Error en el tipo del paquete")
-        
-        if len(packet) < 4:
-            raise   ValueError("El paquete no cuenta con los componentes minimos")
-        
-        if packet[0] != 'SMS':
-            print ("El paquete no se puede procesar")
-            return False
-        
-        for i in packet:
-            if not isinstance(i, str):
-                raise ValueError(f"Error en el dato {i} del paquete")
 
-        if len(packet) == 6: ##Tiene un apodo / esta en contactos (OPCIONAL, NO IMPLEMENTADO)
-            header = packet[5] + ',' + packet[3]
-        else:
-            header = packet[1] + ',' + packet[3]
-        message = packet[4]
-        
-        if message is None:
+        header = packet.sender + ',' + packet.datetime
+
+        if packet.message is None:
             print('El telefono no se encuentra en linea')
         else:
-            self.inbox.update({header : message})
+            self.inbox.update({header : packet.message})
     
     def eraseMessage(self):
         
