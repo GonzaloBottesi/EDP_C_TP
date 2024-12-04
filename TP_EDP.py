@@ -32,7 +32,7 @@ class Telefono:
         self.encendido = False
         self.bloqueado = True
         
-        self.aplicacionActual = None
+        self.currentApp = None
         self.ocupado = False
 
     def powerButton(self):
@@ -85,8 +85,8 @@ class Telefono:
     
     def openApp(self):
         
-        """Abre la aplicacion y le asigna a self.aplicacionActual el puntero a la aplicacion abierta
-            Para usar una aplicacion, usar el atributo aplicacionActual y ckequear que la clase sea la que necesiten
+        """Abre la aplicacion y le asigna a self.currentApp el puntero a la aplicacion abierta
+            Para usar una aplicacion, usar el atributo currentApp y ckequear que la clase sea la que necesiten
         Returns:
             type: Clase de la aplicacion abierta, si es descargada de la Appstore, tiene la clase Aplicacion
         """        
@@ -106,7 +106,7 @@ class Telefono:
             selectedApp = input('Error, por favor escriba el nombre tal como aparece en pantalla')
             
         
-        self.aplicacionActual = self.listaApps.get(selectedApp)
+        self.currentApp = self.listaApps.get(selectedApp)
         
         return type(self.listaApps.get(selectedApp))
     

@@ -148,22 +148,22 @@ def poweredPhoneMenu(telefono: Telefono):
                 case '1':               
                     telefono.openApp()
                     
-                    if isinstance(telefono.aplicacionActual, AppStore):
+                    if isinstance(telefono.currentApp, AppStore):
                         appstoreMenu(telefono)
                         
-                    elif isinstance(telefono.aplicacionActual, Config):
+                    elif isinstance(telefono.currentApp, Config):
                         configMenu(telefono)
                         
-                    elif isinstance(telefono.aplicacionActual, Contactos):
+                    elif isinstance(telefono.currentApp, Contactos):
                         contactsMenu(telefono)
                         
-                    elif isinstance(telefono.aplicacionActual, Llamadas):
+                    elif isinstance(telefono.currentApp, Llamadas):
                         callMenu(telefono) ##Completar dpes de hacer clase llamadas
                     
-                    elif isinstance(telefono.aplicacionActual, Mail):
+                    elif isinstance(telefono.currentApp, Mail):
                         mailsMenu(telefono)
                         
-                    elif isinstance(telefono.aplicacionActual, SMS):
+                    elif isinstance(telefono.currentApp, SMS):
                         SMSMenu(telefono)
                     else:
                         print('Lo siento, de momento la aplicacion esta en desarrollo y no se puede abrir')
@@ -187,16 +187,16 @@ def callMenu(telefono : Telefono):
     while not salir:
         match input('''¿Qué quiere hacer en Llamadas?\n1. Llamar\n2. Atender llamada\n3. Cortar llamada\n4. Ver historial de llamadas\n5.Volver\n'''):
             case '1':
-                paquete_llamada = telefono.aplicacionActual.sendCallRequest(telefono.numero)
+                paquete_llamada = telefono.currentApp.sendCallRequest(telefono.numero)
                 print(paquete_llamada)
             case '2':
-                paquete_recepcion = telefono.aplicacionActual.receivePacket(samplePacket) #Pensar en un paquete de ejemplo
+                paquete_recepcion = telefono.currentApp.receivePacket(samplePacket) #Pensar en un paquete de ejemplo
                 print(paquete_recepcion)
             case '3':
-                paquete_cortar = telefono.aplicacionActual.endCallRequest(telefono.numero) ##Ingresar el numero de ejemplo
+                paquete_cortar = telefono.currentApp.endCallRequest(telefono.numero) ##Ingresar el numero de ejemplo
                 print(paquete_cortar)
             case '4':
-                telefono.aplicacionActual.getCallHistory()
+                telefono.currentApp.getCallHistory()
             case '5':
                 salir = True
             case other:
@@ -212,16 +212,16 @@ def contactsMenu(telefono: Telefono):
                 while not number.isnumeric():
                     number = input('Error, ingrese un numero de telefono valido: ')
                 name = input('Ingrese el nombre')
-                telefono.aplicacionActual.addContact(name,number)
+                telefono.currentApp.addContact(name,number)
             case '2':
                 name = input('Ingrese el nombre del contacto a actualizar')
                 number = input('Ingrese el nuevo numero de telefono: ')
                 while not number.isnumeric():
                     number = input('Error, ingrese un numero de telefono valido: ')
-                telefono.aplicacionActual.updateContact(name,number)
+                telefono.currentApp.updateContact(name,number)
             case '3':
                 name = input('Ingrese el nombre del contacto: ')
-                telefono.aplicacionActual.deleteContact(name)
+                telefono.currentApp.deleteContact(name)
             case '4':
                 salir = True
             case other:
@@ -233,10 +233,10 @@ def mailsMenu(telefono: Telefono):
     while not salir:
         match input('¿Qué quiere hacer con su Mail?\n1. Ver email por no leidos\n2. Ver email por orden de fecha\n3. Salir\n'):
             case '1':
-                telefono.aplicacionActual.sortMailByUnread()
+                telefono.currentApp.sortMailByUnread()
                 #mailsMenu(telefono)
             case '2':
-                telefono.aplicacionActual.sortMailByDate()
+                telefono.currentApp.sortMailByDate()
                 #mailsMenu(telefono)
             case '3':
                 salir = True
@@ -250,15 +250,15 @@ def SMSMenu(telefono : Telefono):
     while not salir:
         match input('Que quiere hacer con los SMS?\n1. Enviar mensaje de SMS\n2. Recibir un mensaje (de ejemplo)\n3. Ver bandeja de entrada\n.4 Eliminar mensajes\n5. Volver\n'):
             case '1':
-                packet = telefono.aplicacionActual.sendMessage(telefono.numero)
+                packet = telefono.currentApp.sendMessage(telefono.numero)
                 centralPacket = central.receivePakcet(packet)
-                telefono.aplicacionActual.receiveMessage(centralPacket)
+                telefono.currentApp.receiveMessage(centralPacket)
             case '2':
-                telefono.aplicacionActual.receiveMessage(sampleMessage)
+                telefono.currentApp.receiveMessage(sampleMessage)
             case '3':
-                telefono.aplicacionActual.viewMessage()
+                telefono.currentApp.viewMessage()
             case '4':
-                telefono.aplicacionActual.eraseMessage()
+                telefono.currentApp.eraseMessage()
             case '5':
                 salir = True
             case other:
@@ -271,7 +271,7 @@ def appstoreMenu(telefono: Telefono):
         match input('¿Qué quiere hacer con la AppStore?\n1. Instalar una app\n2. Desinstalar una App\n3. Volver\n'):
             case '1':
                 name = input('Ingrese el nombre de la aplicacion (buscar nombres en la appstore)')
-                telefono.aplicacionActual.installApp(telefono.configParameters,telefono.listaApps, name)
+                telefono.currentApp.installApp(telefono.configParameters,telefono.listaApps, name)
             case '2':
                 nameList = telefono.listaApps.keys()
                 print('Aplicaciones instaladas: \n')
@@ -280,7 +280,7 @@ def appstoreMenu(telefono: Telefono):
                     print(f'{i}. {app}')
                     i += 1
                 name = input('Ingrese el nombre tal cual como aparece')
-                telefono.aplicacionActual.uninstallApp(telefono.configParameters,telefono.listaApps,name)
+                telefono.currentApp.uninstallApp(telefono.configParameters,telefono.listaApps,name)
             case '3':
                 salir = True
             case other:
@@ -290,18 +290,18 @@ def appstoreMenu(telefono: Telefono):
 def configMenu(telefono: Telefono):
     salir = False
     while not salir:
-        if isinstance(telefono.aplicacionActual, Config):
+        if isinstance(telefono.currentApp, Config):
             match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar/Desactivar red\n4. Activar/Desactivar datos\n5. Salir\n'):
                 case '1':
-                    telefono.aplicacionActual.setName(telefono.configParameters)
+                    telefono.currentApp.setName(telefono.configParameters)
                     #configMenu(telefono)
 
                 case '2':
-                    telefono.aplicacionActual.changePassword(telefono.configParameters)
+                    telefono.currentApp.changePassword(telefono.configParameters)
                     #configMenu(telefono)
 
                 case '3':
-                    telefono.aplicacionActual.red(telefono.configParameters)
+                    telefono.currentApp.red(telefono.configParameters)
                     if telefono.configParameters.red:
                         print('Se activo la red')
                     else:
@@ -309,7 +309,7 @@ def configMenu(telefono: Telefono):
                     #configMenu(telefono)
 
                 case '4':
-                    telefono.aplicacionActual.datos(telefono.configParameters)
+                    telefono.currentApp.datos(telefono.configParameters)
                     if telefono.configParameters.datos:
                         print('Se activaron los datos')
                     else:

@@ -186,19 +186,19 @@ santi.openApp()
 
 
 ##ENVIAR LLAMADA
-paquete = gonza.aplicacionActual.sendCallRequest(gonza.numero) 
+paquete = gonza.currentApp.sendCallRequest(gonza.numero) 
 paquete2 = test.receivePakcet(paquete)
 
 ##RESPONDER LLAMADA
-paquete3 = santi.aplicacionActual.receivePacket(paquete2)
+paquete3 = santi.currentApp.receivePacket(paquete2)
 paquete4 = test.receivePakcet(paquete3)
-paquete5 = gonza.aplicacionActual.receivePacket(paquete4)
+paquete5 = gonza.currentApp.receivePacket(paquete4)
 
 ##CORTAR LLAMADA
-respuesta = santi.aplicacionActual.endCallRequest(santi.numero)
+respuesta = santi.currentApp.endCallRequest(santi.numero)
 respuesta2 = test.receivePakcet(respuesta)
-respuesta3 = gonza.aplicacionActual.receivePacket(respuesta2)
+respuesta3 = gonza.currentApp.receivePacket(respuesta2)
 
-gonza.aplicacionActual.getCallHistory()
-santi.aplicacionActual.getCallHistory()
+gonza.currentApp.getCallHistory()
+santi.currentApp.getCallHistory()
 print('fin')'''
