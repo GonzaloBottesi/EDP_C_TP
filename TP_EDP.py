@@ -10,7 +10,7 @@ from SMS import SMS
 
 class Telefono:
     
-    def __init__(self, id, nombre, modelo, os, version, ram, almacenamiento: int, numero) -> None:
+    def __init__(self, id, name, model, os, version, ram, almacenamiento: int, numero) -> None:
         
         self.listaApps = dict()
         self.listaApps.update({"AppStore" : AppStore('0 K'), 
@@ -20,19 +20,18 @@ class Telefono:
                                "SMS" : SMS('0 K') , 
                                "Contactos" : Contactos('0 K')})
         self.id = id
-        self.nombre = nombre
-        self.modelo = modelo
+        self.model = model
         self.os = os
         self.ram = ram
 
-        self.configParameters = ConfigParameters(nombre, password = '', datos = False, red = True, 
+        self.configParameters = ConfigParameters(name, password = '', datos = False, red = True, 
                                            almacenamiento = self.tamanio_a_bytes(almacenamiento), version = version)
         
         self.numero = numero    
         self.encendido = False
         self.bloqueado = True
         
-        self.aplicacionActual = None
+        self.currentApp = None
         self.ocupado = False
 
     def powerButton(self):
@@ -85,8 +84,8 @@ class Telefono:
     
     def openApp(self):
         
-        """Abre la aplicacion y le asigna a self.aplicacionActual el puntero a la aplicacion abierta
-            Para usar una aplicacion, usar el atributo aplicacionActual y ckequear que la clase sea la que necesiten
+        """Abre la aplicacion y le asigna a self.currentApp el puntero a la aplicacion abierta
+            Para usar una aplicacion, usar el atributo currentApp y ckequear que la clase sea la que necesiten
         Returns:
             type: Clase de la aplicacion abierta, si es descargada de la Appstore, tiene la clase Aplicacion
         """        
@@ -100,13 +99,13 @@ class Telefono:
             print(f'{i}. {app}')
             i += 1
             
-        selectedApp = input('Escriba el nombre de la aplicacion')
+        selectedApp = input('Escriba el nombre de la aplicacion: ')
         
         while selectedApp not in nameList:
-            selectedApp = input('Error, por favor escriba el nombre tal como aparece en pantalla')
+            selectedApp = input('Error, por favor escriba el nombre tal como aparece en pantalla: ')
             
         
-        self.aplicacionActual = self.listaApps.get(selectedApp)
+        self.currentApp = self.listaApps.get(selectedApp)
         
         return type(self.listaApps.get(selectedApp))
     
@@ -151,16 +150,16 @@ class Telefono:
         return int(float(tamanio_formateado))
 
     def __str__(self) -> str:
-        string = f'{self.modelo} de {self.nombre}; Num: {self.numero}'
+        string = f'{self.model} de {self.configParameters.name}; Num: {self.numero}'
         return string
     
     
 class FabricaDeTelefonos:
     def __init__(self):
-        self.crear_archivo_no_existe('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
-        self.telefonos = self.extraer_archivo('telefonos.csv')
+        self.createFile('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
+        self.telefonos = self.extractFile('telefonos.csv')
 
-    def crear_archivo_no_existe(self, archivo, filas_iniciales): # ESTA EN FUNCIONES AUXILIARES
+    def createFile(self, archivo, filas_iniciales): 
         try:
             with open(archivo, 'x', encoding='utf-8', newline='') as arch:
                 escritor = csv.writer(arch)
@@ -169,7 +168,7 @@ class FabricaDeTelefonos:
         except FileExistsError:
             return
   
-    def extraer_archivo(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
+    def extractFile(self, archivo_csv): 
         telefonos = dict()
         try:
             with open(archivo_csv, mode='r', newline='', encoding='utf-8') as archivo:
@@ -188,12 +187,12 @@ class FabricaDeTelefonos:
         except Exception as e:
             print(f"Se produjo un error al leer el archivo CSV: {e}")
 
-    def crear_telefono(self):
+    def createPhone(self):
         id = input('Ingrese el ID de su teléfono: ')
         while id in self.telefonos or not id.isdigit():
             id = input('Error en la introducción del ID\nIngrese el ID de su teléfono:')
-        nombre = input('Ingrese el nombre de su teléfono: ')
-        modelo = input('Ingrese el modelo de su teléfono: ')
+        name = input('Ingrese el nombre de su teléfono: ')
+        model = input('Ingrese el modelo de su teléfono: ')
         os = input('Ingrese el sistema operativo: ')
         version = input ('Ingrese la version (EJ. 4.0.0): ')
         ram = input('Ingrese la RAM (EJ. 16G): ')
@@ -203,11 +202,11 @@ class FabricaDeTelefonos:
             numero = input('ERROR, por favor ingrese un numero valido')
         #while not almacenamiento.isdigit():
          #   almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
-        telefono = Telefono(id, nombre, modelo, os, version, ram, almacenamiento, numero)  # Asigna None o un valor a `numero`
+        telefono = Telefono(id, name, model, os, version, ram, almacenamiento, numero)  # Asigna None o un valor a `numero`
         self.telefonos[id] = telefono
         return {telefono.id : telefono}
         
-    def eliminar_telefono(self):
+    def erasePhone(self):
         if self.telefonos:
             id = input('Ingrese el ID del celular que quiere eliminar: ')
             while id not in self.telefonos:
@@ -227,7 +226,7 @@ class FabricaDeTelefonos:
         return True
             
      
-    def elegir_telefono(self):
+    def choosePhone(self):
         self.showPhones()
         if self.telefonos:
             idnumber = input('Ingrese el ID del celular que quiere usar: ')
@@ -237,12 +236,12 @@ class FabricaDeTelefonos:
         else:
             print('No hay telefonos creados ')
     
-    def actualizar_archivos(self): # ESTA EN FUNCIONES AUXILIARES
+    def updateFiles(self): 
         with open('telefonos.csv', 'w', encoding='utf-8', newline='') as archivo:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
             for telefono in self.telefonos.values():
-                escritor.writerow([telefono.id, telefono.configParameters.nombre, telefono.modelo, telefono.os,
+                escritor.writerow([telefono.id, telefono.configParameters.name, telefono.model, telefono.os,
                                    telefono.configParameters.version, telefono.ram, telefono.configParameters.almacenamiento, telefono.numero])
     
 

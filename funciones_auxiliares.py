@@ -2,7 +2,7 @@ import csv
 #from TP_EDP import Telefono
 
 #cambiar algunas cosas de los archivos auxiliares
-def crear_archivo_no_existe(archivo, filas_iniciales): # funcion que crea UN archivo EN CASO DE QUE NO EXISTA
+def createFile(archivo, filas_iniciales): # funcion que crea UN archivo EN CASO DE QUE NO EXISTA
     try:
         with open(archivo, 'x', encoding='utf-8', newline='') as arch:
             escritor = csv.writer(arch)
@@ -12,7 +12,7 @@ def crear_archivo_no_existe(archivo, filas_iniciales): # funcion que crea UN arc
         return
 
 
-def extraer_archivo(archivo_csv):
+def extractFile(archivo_csv):
     telefonos = dict()
     try:
         with open(archivo_csv, mode='r', newline='') as archivo:
@@ -31,12 +31,12 @@ def extraer_archivo(archivo_csv):
     except Exception as e:
         print(f"Se produjo un error al leer el archivo CSV: {e}")
 
-def actualizar_archivos(self):
+def updateFiles(self):
     with open('telefonos.csv', 'w', encoding='utf-8', newline='') as archivo:
         escritor = csv.writer(archivo)
         escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
         for telefono in self.telefonos.values():
-            escritor.writerow([telefono.id, telefono.nombre, telefono.modelo, telefono.os,
+            escritor.writerow([telefono.id, telefono.configParameters.nombre, telefono.model, telefono.os,
                                 telefono.version, telefono.ram, telefono.almacenamiento, telefono.numero])
 
 class Nodo:

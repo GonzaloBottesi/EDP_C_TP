@@ -1,12 +1,12 @@
 #Clase aplicacion y derivados
 
 class Aplicacion:
-    def __init__(self, peso : int) -> None: # Peso en bytes 
-        self.abierto = False
-        self.peso = self.tamanio_a_bytes(peso)
+    def __init__(self, weight : int) -> None: # weight en bytes 
+        self.isOpen = False
+        self.weight = self.tamanio_a_bytes(weight)
 
     def onOff (self):
-        self.abierto = not self.abierto
+        self.isOpen = not self.isOpen
         
     @staticmethod
     def tamanio_a_bytes(tamanio_formateado):

@@ -18,6 +18,7 @@ class Columnas(Enum):
     LAST_UPDATED = 10
     CURRENT_VER = 11
     ANDROID_VER = 12
+    
 class DataAnalysis:
     def __init__(self) -> None:
         self.rawData = self.getData('Play Store Data.csv')

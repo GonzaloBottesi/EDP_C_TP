@@ -1,113 +1,106 @@
 import datetime
 from Aplicacion import Aplicacion
+from Paquete import PaqueteLlamada, Intentions
+from Stack import Stack
+
 ## Modelo de paquete a enviar: ['LLAMADA', Emisor , Receptor, datetime , pedido]. R = REQUEST ; B = BUSY ; N = NOT FOUND ; K = OK ; S = STOP ; F = RECHAZADO
 class Llamadas(Aplicacion):
-    def __init__(self, peso) -> None:
-        super().__init__(peso)
-        self.callHistory = dict()
+    def __init__(self, weight) -> None:
+        super().__init__(weight)
+        self.callHistory = Stack()
         
     def sendCallRequest (self, tel1 : str):
         
-        if 'En curso' in self.callHistory.values():
-            print('Ya tiene una llamada en curso')
-            return None
+        if not self.callHistory.empty():
+            if self.callHistory.topValue.value[1] == 'En curso':
+                print('Ya tiene una llamada en curso')
+                return None
         
         tel2 = input('Ingrese el numero de telefono a llamar: ')
         
-        packet = ['LLAMADA', tel1 , tel2 , datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") ,'R']
+        packet = PaqueteLlamada(tel1, tel2, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S"), Intentions.REQUEST )
         
         return packet
     
-    def receivePacket(self, packet : list):
+    def receivePacket(self, packet : PaqueteLlamada):
+        
+        if not isinstance(packet, PaqueteLlamada):  
+            print('Error en paquete, no se puede procesar')
+            return False
+        
+        if not self.callHistory.empty():
+            if self.callHistory.topValue.value[1] == 'En curso':
+                print('Ya tiene una llamada en curso')
+                return None
+        
+        if packet.intention == Intentions.BUSY:
+            header = packet.receiver + '-' + packet.datetime
+            self.callHistory.push(( header , 'Ocupado'))
             
-        if len(packet) != 5:
-            print('Error en el largo del paquete')
-            return False
-        
-        if packet[0] != 'LLAMADA':
-            print(f'Error de paquete: no se puede procesar {packet[0]}')
-            return False
-        
-        if not packet[4] in ['R' , 'B' , 'N' , 'K' , 'S', 'F']: ##hacer caso F
-            print('Error al recibir el paquete: codigo de estado erroneo')
-            return False
-        
-        if packet[4] == 'B':
-            header = packet[2] + '-' + packet[3]
-            self.callHistory.update({ header : 'Ocupado'})
-            
-        elif packet[4] == 'N':
+        elif packet.intention == Intentions.NOT_FOUND:
             print ('El telefono no se encuentra en linea')
             
-        elif packet[4] == 'K':
-            header = packet[2] + '-' + packet[3]
-            self.callHistory.update({ header : 'En curso'})
+        elif packet.intention == Intentions.OK:
+            header = packet.receiver + '-' + packet.datetime
+            self.callHistory.push(( header , 'En curso'))
             
-        elif packet [4] == 'S': ##Esto asume que tu propio numero de telefono esta en packet[1]
-            header = packet[1] + '-' + packet[3]
-            time1 = datetime.datetime.strptime(packet[3],"%d/%m/%Y, %H:%M:%S") ##Inicio de comunicacion
+        elif packet.intention == Intentions.STOP: ##Esto asume que tu propio numero de telefono esta en packet.sender
+            header = packet.sender + '-' + packet.datetime
+            time1 = datetime.datetime.strptime(packet.datetime,"%d/%m/%Y, %H:%M:%S") ##Inicio de comunicacion
             time2 = datetime.datetime.now().replace(microsecond = 0) #Fin de comunicacion
             delta = time2 - time1
-            self.callHistory.update({header : 'Duracion: ' + str(delta)})
+            self.callHistory.pop()
+            self.callHistory.push((header , 'Duracion: ' + str(delta)))
             
-        elif packet[4] == 'R':
+        elif packet.intention == Intentions.REQUEST:
             choice = None
-            choice = input(f'Llamada entrante de {packet[1]} \n Aceptar? (Y/N)')
+            choice = input(f'Llamada entrante de {packet.sender} \n Aceptar? (Y/N)')
             choice.upper()
             while not choice in ['Y', 'N']:
                 choice = input('Error, ingrese una opcion valida (Y/N)')
                 choice.upper()
                     
             if choice == 'N':
-                packet[4] = 'F'
+                packet.intention = Intentions.REJECTED
                 return packet
             else:
-                header = packet[1] + '-' + packet[3]
-                self.callHistory.update({header : 'En curso'})
-                packet[4] = 'K'
+                header = packet.sender + '-' + packet.datetime
+                self.callHistory.push((header , 'En curso'))
+                packet.intention = Intentions.OK
                 return packet
-        elif packet[4] == 'F':
-            header = packet[1] + '-' + packet[3]
-            self.callHistory.update({header : 'Rechazada'})
+        elif packet.intention == Intentions.REJECTED:
+            header = packet.sender + '-' + packet.datetime
+            self.callHistory.push((header , 'Rechazada'))
            
     def endCallRequest (self, tel1 : str):
         
-        if 'En curso' not in self.callHistory.values():
+        if 'En curso' not in self.callHistory.topValue.value[1]:
             print('No hay llamada en curso')
             return False
         
-        target = None
-        
-        for header in self.callHistory.keys():
-            if self.callHistory[header] == 'En curso':
-                target = header
+        target = self.callHistory.pop()[0]
                 
         target = target.split('-')
         
-        packet = ['LLAMADA', tel1 , target[0] , target[1] , 'S' ]
-  
+        #packet = ['LLAMADA', tel1 , target[0] , target[1] , 'S' ]
+        packet = PaqueteLlamada(tel1, target[0], target[1], Intentions.STOP)
+        
         time1 = datetime.datetime.strptime(target[1],"%d/%m/%Y, %H:%M:%S") ##Inicio de comunicacion
         time2 = datetime.datetime.now().replace(microsecond = 0) #Fin de comunicacion
         delta = time2 - time1
         
-        self.callHistory.update({target[0] + '-' + target[1] : 'Duracion: ' + str(delta)})
+        self.callHistory.push((target[0] + '-' + target[1] , 'Duracion: ' + str(delta)))
         
         return packet
        
     def getCallHistory(self):
-        
-        if len(self.callHistory.keys()) == 0:
-            print('No hay llamadas en el historial')
-            return None
-        
-        for header, status in self.callHistory.items():
-            print(f'{header}        {status}')
-            return True
+        print(self.callHistory)
+        return None
     
     @staticmethod
     def getDatetimeFromHeader (header : str):
         
         header.split(',')
-        date = datetime.datetime.strptime(header[1], format = "%d/%m/%Y, %H:%M:%S")
+        date = datetime.datetime.strptime(header[1] , "%d/%m/%Y, %H:%M:%S")
         
         return date

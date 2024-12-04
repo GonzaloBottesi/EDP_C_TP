@@ -1,29 +1,29 @@
 import csv
 import datetime
 from TP_EDP import Telefono
-
+import Paquete as pkt
 
 class Central():
     
     def __init__(self):
         
-        self.telefonos=self.extraer_archivo('telefonos.csv')
-        self.registro_llamadas=dict()
-        self.registro_sms = dict()
+        self.phones = self.extractFile('telefonos.csv')
+        self.callLog = dict()
+        self.SMSLog = dict()
         
     #Verificar si van todos los atributos del l
     
-    def extraer_archivo(self, archivo_csv):
-        telefonos=dict()
+    def extractFile(self, archivo_csv):
+        phones = dict()
         try:
             with open(archivo_csv, mode='r', newline='', encoding = 'utf-8') as archivo:
                 lector_csv = csv.reader(archivo)
                 next(lector_csv)
                 for telefono in lector_csv:
-                    telefonos[telefono[0]]=Telefono(telefono[0],telefono[1],telefono[2],telefono[3],
+                    phones[int(telefono[0])]=Telefono(int(telefono[0]),telefono[1],telefono[2],telefono[3],
                                                     telefono[4],telefono[5],telefono[6],telefono[7])      
             print("Todos los teléfonos han sido registrados desde el archivo CSV.")
-            return telefonos
+            return phones
         except FileNotFoundError:
             print("El archivo CSV no fue encontrado.")
         except KeyError as e:
@@ -31,28 +31,28 @@ class Central():
         except Exception as e:
             print(f"Se produjo un error al leer el archivo CSV: {e}")
 
-    def eliminar_dispositivo(self,telefono:Telefono):
-        if telefono.id in self.telefonos:
-            self.telefonos.pop(telefono.id)
+    def eraseDevice(self,telefono:Telefono):
+        if telefono.id in self.phones:
+            self.phones.pop(telefono.id)
             print (f"Se elimino el telefono con el id {telefono.id}")
         else:
             print (f"No se encuentra registrado el telefono con el id {telefono.id}")
         
-    def registrar_telefono(self, telefono:Telefono):
-        if telefono.id not in self.telefonos: 
-            self.telefonos.update({telefono.id : telefono})
+    def registerDevice(self, telefono:Telefono):
+        if telefono.id not in self.phones: 
+            self.phones.update({telefono.id : telefono})
             print (f"Se registro el telefono con el id {telefono.id}")
         else:
             print (f"Ya se encuentra registrado el telefono con el id {telefono.id}")
     
     
-    def verificar_disponibilidad_de_red(self, numero):
+    def verifyWeb(self, numero):
         
-        if numero not in self.telefonos:
+        if numero not in self.phones:
             print(f"El telefono con numero {numero} no esta registrado.")
             return False
 
-        dispositivo = self.telefonos[numero]
+        dispositivo = self.phones[numero]
         
         if dispositivo.encendido and dispositivo.configParameters.red:
             print(f"El telefono con numero {numero} esta disponible.")
@@ -62,13 +62,13 @@ class Central():
             return False
         
     
-    def verificar_acceso_internet(self, numero):
+    def verifyInternet(self, numero):
         
-        if numero not in self.telefonos:
+        if numero not in self.phones:
             print(f"El telefono con numero {numero} no tiene acceso a internet.")
             return False
         
-        dispositivo = self.telefonos[numero]
+        dispositivo = self.phones[numero]
         if dispositivo.encendido and dispositivo.datos:
             print(f"El telefono con numero {numero} tiene acceso a internet.")
             return True
@@ -76,78 +76,96 @@ class Central():
             print(f"El telefono con numero {numero} no tiene acceso a internet.")
             return False
     
-    def receivePakcet(self, packet : list):
-        types = ['SMS', 'LLAMADA']
+    def receivePakcet(self, packet : pkt.Paquete):
         
-        if packet[0] not in types:
+        if not isinstance(packet, pkt.Paquete):
             print ('CENTRAL: Error al procesar paquete, tipo erroneo')
             return False
         
-        if packet[0] == 'LLAMADA':
-            newPacket = self.manejarLlamada(packet)
+        if isinstance(packet, pkt.PaqueteLlamada):
+            newPacket = self.handleCall(packet)
             return newPacket
         else:
-            pass ##Manejar SMS
+            newPacket = self.handleSMS(packet)
+            return newPacket
     
-    def manejarSMS (self, packet : list):
-        receptor = packet[2]
-        if not receptor in self.telefonos:
-            packet[4] = None ##Distinto de un caracter vacio '' asi que nunca puede entrar por error
-            return packet
+    def handleSMS (self, packet : pkt.PaqueteSMS):
+        receptor = packet.receiver
+        isReceiver = False
+        for phone in self.phones.values():
+            if phone.numero == receptor:
+                isReceiver = True
+        if not isReceiver:
+            packet.message = None ##Distinto de un caracter vacio '' asi que nunca puede entrar por error
+        return packet
     
 ## Modelo de paquete a enviar: ['LLAMADA', Emisor , Receptor, datetime , pedido]. R = REQUEST ; B = BUSY ; N = NOT FOUND ; K = OK ; S = STOP ; F = RECHAZADO
     
-    def manejarLlamada(self, packet : list):
+    def handleCall(self, packet : pkt.PaqueteLlamada):
         """Inicia la llamada verificando la disponibilidad de ambos teléfonos."""
         
-        numero_origen = packet[1]
-        numero_destino = packet[2]
+        originNumber = packet.sender
+        destinyNumber = packet.receiver
         
-        if not (numero_origen in self.telefonos and numero_destino in self.telefonos):
-            print(f"El teléfono con número {numero_destino} no está registrado en la central.")
-            packet[4] = 'N'
+        senderRegistered = False
+        receiverRegistered = False
+        
+        senderId = None
+        receiverId = None
+        
+        for registeredPhone in self.phones.values():
+            if originNumber == registeredPhone.numero:
+                senderRegistered = True
+                senderId = registeredPhone.id
+            if destinyNumber == registeredPhone.numero:
+                receiverRegistered = True
+                receiverId = registeredPhone.id
+        
+        if not (senderRegistered and receiverRegistered):
+            print(f"El teléfono con número {destinyNumber} no está registrado en la central.")
+            packet.intention = pkt.Intentions.NOT_FOUND
             return packet
         
         #Ambos estan registrados en la central
-        telefono_origen = self.telefonos[numero_origen]
-        telefono_destino = self.telefonos[numero_destino]
+        originPhone = self.phones[senderId]
+        destinyPhone = self.phones[receiverId]
         
-        if packet[4] == 'R':
+        if packet.intention == pkt.Intentions.REQUEST:
             # Verificar si ambos teléfonos están disponibles para la llamada
-            if not (self.verificar_disponibilidad_de_red(numero_origen) and self.verificar_disponibilidad_de_red(numero_destino)):
+            if not (self.verifyWeb(senderId) and self.verifyWeb(receiverId)):
                 print("Uno o ambos teléfonos no están disponibles para la llamada.")
                 return False
 
-            if telefono_destino.ocupado:
-                print(f"No se puede realizar la llamada. El número {numero_destino} está ocupado.")
-                packet[4] = 'B'
+            if destinyPhone.ocupado:
+                print(f"No se puede realizar la llamada. El número {destinyNumber} está ocupado.")
+                packet.intention = pkt.Intentions.BUSY
                 return packet
             else:
                 #['LLAMADA', Emisor , Receptor, datetime , 'R']
                 return packet
-        elif packet[4] == 'K':
+        elif packet.intention == pkt.Intentions.OK:
             return packet
-        elif packet[4] == 'F':
+        elif packet.intention == pkt.Intentions.REJECTED:
             #['LLAMADA', Emisor , Receptor, datetime , 'F']
-            header = packet[1] + ' - ' + packet[2] +' , ' + packet[3]
-            self.registro_llamadas.update({header : 'Rechazada'})    
+            header = packet.sender + ' - ' + packet.receiver +' , ' + packet.datetime
+            self.callLog.update({header : 'Rechazada'})    
             return packet
-        elif packet[4] == 'S':
-            header = packet[1] + ' - ' + packet[2] +' , ' + packet[3]
-            time1 = datetime.datetime.strptime(packet[3],"%d/%m/%Y, %H:%M:%S") ##Inicio de comunicacion
+        elif packet.intention == pkt.Intentions.STOP:
+            header = packet.sender + ' - ' + packet.receiver +' , ' + packet.datetime
+            time1 = datetime.datetime.strptime(packet.datetime,"%d/%m/%Y, %H:%M:%S") ##Inicio de comunicacion
             time2 = datetime.datetime.now().replace(microsecond = 0) #Fin de comunicacion
             delta = time2 - time1
-            self.registro_llamadas.update({header : 'Duracion: ' + str(delta)})
+            self.callLog.update({header : 'Duracion: ' + str(delta)})
             return packet
 
-'''       PRUEBA DE LLAMADA, RECEPCION Y CORTE   
+'''#      PRUEBA DE LLAMADA, RECEPCION Y CORTE   
 test = Central()
 
 santi = Telefono(2,'Santi', 'S22', 'Android', '3.0.0', '16 G', '256 G', '1122857835')
 gonza = Telefono(3,'Gonza', 'S22', 'Android', '3.0.0', '16 G', '256 G', '1159369841')
 
 ##El numero como clave porque no se va a repetir / no se deberia repetir para la central
-test.telefonos.update({santi.id : santi,
+test.phones.update({santi.id : santi,
                        gonza.id : gonza})
 
 
@@ -168,17 +186,19 @@ santi.openApp()
 
 
 ##ENVIAR LLAMADA
-paquete = gonza.aplicacionActual.sendCallRequest(gonza.numero) 
+paquete = gonza.currentApp.sendCallRequest(gonza.numero) 
 paquete2 = test.receivePakcet(paquete)
 
 ##RESPONDER LLAMADA
-paquete3 = santi.aplicacionActual.receivePacket(paquete2)
+paquete3 = santi.currentApp.receivePacket(paquete2)
 paquete4 = test.receivePakcet(paquete3)
-paquete5 = gonza.aplicacionActual.receivePacket(paquete4)
+paquete5 = gonza.currentApp.receivePacket(paquete4)
 
 ##CORTAR LLAMADA
-respuesta = santi.aplicacionActual.endCallRequest(santi.numero)
+respuesta = santi.currentApp.endCallRequest(santi.numero)
 respuesta2 = test.receivePakcet(respuesta)
-respuesta3 = gonza.aplicacionActual.receivePacket(respuesta2)
+respuesta3 = gonza.currentApp.receivePacket(respuesta2)
 
-print('fin') '''
+gonza.currentApp.getCallHistory()
+santi.currentApp.getCallHistory()
+print('fin')'''

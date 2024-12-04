@@ -9,8 +9,8 @@ class Config(Aplicacion):
     Args:
         Aplicacion (_Clase_ _padre_)
     """    
-    def __init__(self, peso):
-        super().__init__(peso)
+    def __init__(self, weight):
+        super().__init__(weight)
     
     def changePassword(self, tel : ConfigParameters): ##Hay que pasarle el telefono sobre el que esta actuando
         
@@ -42,7 +42,7 @@ class Config(Aplicacion):
         
         if tel.pin == password:
             newname = input ("Ingrese nombre nuevo: ")
-            tel.nombre = newname
+            tel.name = newname
             return True
         else:
             print("Contraseña incorrecta")

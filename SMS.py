@@ -1,10 +1,11 @@
 from Aplicacion import Aplicacion
 import datetime
+from Paquete import PaqueteSMS
 
 class SMS (Aplicacion):
-    def __init__(self, peso) -> None:
-        super().__init__(peso)
-        self.bandeja = dict()
+    def __init__(self, weight) -> None:
+        super().__init__(weight)
+        self.inbox = dict()
         
     def sendMessage(self, telNumber : str):
         
@@ -16,12 +17,16 @@ class SMS (Aplicacion):
         """        
         
         destiny = input('Ingrese el numero del destinatario: ')
-        message = input('Ingrese el mensaje:')
-        packet = ['SMS', telNumber , destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , message]
+        message = input('Ingrese el mensaje (maximo 160 caracteres):')
+        if len(message) > 160:
+            message = message[:160]
+
+        packet = PaqueteSMS(telNumber, destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S"), message)
+        #packet = ['SMS', telNumber , destiny, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , message]
         return packet
     
-    def receiveMessage (self, packet):
-        """Recibe el mensaje y lo coloca en la bandeja de entrada
+    def receiveMessage (self, packet : PaqueteSMS):
+        """Recibe el mensaje y lo coloca en la inbox de entrada
 
         Raises:
             TypeError: Salta si el paquete no es una lista
@@ -31,30 +36,15 @@ class SMS (Aplicacion):
         Returns:
             False: En caso de que el paquete no sea un mensaje SMS
         """        
-        if not isinstance(packet, list):
+        if not isinstance(packet, PaqueteSMS):
             raise TypeError ("Error en el tipo del paquete")
-        
-        if len(packet) < 4:
-            raise   ValueError("El paquete no cuenta con los componentes minimos")
-        
-        if packet[0] != 'SMS':
-            print ("El paquete no se puede procesar")
-            return False
-        
-        for i in packet:
-            if not isinstance(i, str):
-                raise ValueError(f"Error en el dato {i} del paquete")
 
-        if len(packet) == 6: ##Tiene un apodo / esta en contactos (OPCIONAL, NO IMPLEMENTADO)
-            header = packet[5] + ',' + packet[3]
-        else:
-            header = packet[1] + ',' + packet[3]
-        message = packet[4]
-        
-        if message == None:
+        header = packet.sender + ',' + packet.datetime
+
+        if packet.message is None:
             print('El telefono no se encuentra en linea')
         else:
-            self.bandeja.update({header : message})
+            self.inbox.update({header : packet.message})
     
     def eraseMessage(self):
         
@@ -62,7 +52,7 @@ class SMS (Aplicacion):
         """        
         options = ['Y', 'N']
         choice = input('Quiere borrar multiples mensajes (Y/N)')
-        choice = choice.upper(choice)
+        choice = choice.upper()
         if not choice in options:
             print ('Error, por favor ingrese una opcion correcta')
           
@@ -81,26 +71,26 @@ class SMS (Aplicacion):
             
     def eraseMessageSingle(self, number):
     
-        headerList = [* self.bandeja.keys()]
-        self.bandeja.pop(headerList[number])
+        headerList = [* self.inbox.keys()]
+        self.inbox.pop(headerList[number])
         print('Mensaje eliminado exitosamente')
         return 1
     
     def eraseMessageBulk(self, header):
             
-        if not any(header in i for i in self.bandeja):
+        if not any(header in i for i in self.inbox):
             print("No existe un encabezado con esos datos")
             return 0
                 
         i = 0
         eraseList = []
-        for hd in self.bandeja:
+        for hd in self.inbox:
             if header in hd:
                 i += 1
                 eraseList.append(hd)
                 
         for erase in eraseList:
-            self.bandeja.pop(erase)
+            self.inbox.pop(erase)
             
         print(f"Se eliminaron {i} mensajes")
         return i
@@ -110,7 +100,7 @@ class SMS (Aplicacion):
         ##El paginado se deja como extra en caso de que haya tiempo
         
         number = 1
-        for header,message in self.bandeja.items():
+        for header,message in self.inbox.items():
             print(f'{number}. {header}: {message}')
             number += 1
         return number
