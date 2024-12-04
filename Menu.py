@@ -1,5 +1,6 @@
 #pruebaaaaaaa a ver si funciona
 # MAIN
+import os
 import datetime
 from TP_EDP import *
 from Central import Central
@@ -12,7 +13,7 @@ from Mail import Mail
 from SMS import SMS
 from DataAnalysis import DataAnalysis
 import Paquete as pkt
-#crear_archivo_no_existe('telefonos.csv',['ID','NOMBRE','MODELO','OS','VERSION','RAM','ALMACENAMIENTO','NUMERO']) #crearlo las veces que sea neceario (es decir las veces que se usan archivos)
+#createFile('telefonos.csv',['ID','NOMBRE','MODELO','OS','VERSION','RAM','ALMACENAMIENTO','NUMERO']) #crearlo las veces que sea neceario (es decir las veces que se usan archivos)
 
 central = Central()
 phoneList = dict()
@@ -23,6 +24,7 @@ phoneFactory = FabricaDeTelefonos()
 def menu1():
     salir = False
     while not salir:
+        os.system('cls')
         match input('¿Qué quiere hacer con el menu\n1. Ir a la central de Telefonos\n2. Ir a la fabrica de telefonos\n3. Ver el analisis de Play Store Data\n4. Salir\n '):
             case '1':
                 phoneCentralMenu()
@@ -81,26 +83,28 @@ def phoneCentralMenu():
 def phoneFactoryMenu():
     salir = False
     while not salir:
+        os.system('cls')
         match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
             case '1':
                 newPhoneEntry = phoneFactory.createPhone()  # Volver al menú
                 phoneList.update(newPhoneEntry)
-                #phoneFactoryMenu()
+
             case '2':
                 key = phoneFactory.erasePhone() # Volver al menú
                 if key is not False:
                     phoneList.pop(key)
-                #phoneFactoryMenu()
+
             case '3':
                 telefono = phoneFactory.choosePhone()
                 if isinstance(telefono, Telefono):
                     phoneList.update({telefono.id : telefono})
                     telefono.powerButton() # Al entrar al menu se prende solo el celular
+                    os.system('cls')
                     print('Telefono encendido')
                     phoneMenu(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
                 else:
                     pass
-                   # phoneFactoryMenu()
+
             case '4':
                 salir = True
                 print('Salir')
@@ -108,7 +112,7 @@ def phoneFactoryMenu():
                 #menu1()
             case other:
                 print('Esta opción no está disponible en este momento')
-                #phoneFactoryMenu()
+
 
     #menu1()
 
@@ -131,7 +135,7 @@ def phoneMenu(telefono: Telefono):
                 case other:
                     print('Esta opción no está disponible')
                     #phoneMenu(telefono)
-        #phoneFactoryMenu()
+        
     else:
         print('ERROR')
 
@@ -139,6 +143,7 @@ def poweredPhoneMenu(telefono: Telefono):
     if telefono.encendido and not telefono.bloqueado: # Si el celular esta desbloqueado
         salir = False
         while not salir:
+            os.system('cls')
             match input('''¿Qué quiere hacer?\n1. Abrir una aplicacion\n2. Apagar\n'''):
                 case '1':               
                     telefono.openApp()
@@ -166,7 +171,7 @@ def poweredPhoneMenu(telefono: Telefono):
                     telefono.Apagar()
                     telefono.lock()
                     salir = True
-                    #phoneFactoryMenu()
+                    
                     
                 case other:
                     print('Esa opción no está disponible en este momento')
@@ -240,14 +245,16 @@ def mailsMenu(telefono: Telefono):
                 print('Error, por favor ingrese una opcion valida \n')
     
 def SMSMenu(telefono : Telefono):
-    mensaje_ejemplo = ['SMS', '1123456789' , telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , 'Mensaje de ejemplo']
+    sampleMessage = pkt.PaqueteSMS('1123456789' , telefono.numero, datetime.datetime.now().replace(microsecond = 0).strftime("%d/%m/%Y, %H:%M:%S") , 'Mensaje de ejemplo')
     salir = False
     while not salir:
         match input('Que quiere hacer con los SMS?\n1. Enviar mensaje de SMS\n2. Recibir un mensaje (de ejemplo)\n3. Ver bandeja de entrada\n.4 Eliminar mensajes\n5. Volver\n'):
             case '1':
-                telefono.aplicacionActual.sendMessage(telefono.numero)
+                packet = telefono.aplicacionActual.sendMessage(telefono.numero)
+                centralPacket = central.receivePakcet(packet)
+                telefono.aplicacionActual.receiveMessage(centralPacket)
             case '2':
-                telefono.aplicacionActual.receiveMessage(mensaje_ejemplo)
+                telefono.aplicacionActual.receiveMessage(sampleMessage)
             case '3':
                 telefono.aplicacionActual.viewMessage()
             case '4':

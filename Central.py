@@ -91,7 +91,11 @@ class Central():
     
     def handleSMS (self, packet : pkt.PaqueteSMS):
         receptor = packet.receiver
-        if not receptor in self.phones:
+        isReceiver = False
+        for phone in self.phones.values():
+            if phone.numero == receptor:
+                isReceiver = True
+        if not isReceiver:
             packet.message = None ##Distinto de un caracter vacio '' asi que nunca puede entrar por error
         return packet
     

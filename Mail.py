@@ -1,13 +1,13 @@
 import csv
 from Aplicacion import Aplicacion
-from funciones_auxiliares import crear_archivo_no_existe, ListaEnlazada
+from funciones_auxiliares import createFile, ListaEnlazada
 from datetime import datetime
 
 class Mail(Aplicacion):
     
     def __init__(self, weight):
         super().__init__(weight)
-        crear_archivo_no_existe('mails.csv',['ID','DE','PARA','FECHA','MENSAJE','LECTURA'])
+        createFile('mails.csv',['ID','DE','PARA','FECHA','MENSAJE','LECTURA'])
         self.mails=self.extractFile('mails.csv')
      
     def extractFile(self, archivo_csv):

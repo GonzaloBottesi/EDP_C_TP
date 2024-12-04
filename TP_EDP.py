@@ -157,10 +157,10 @@ class Telefono:
     
 class FabricaDeTelefonos:
     def __init__(self):
-        self.crear_archivo_no_existe('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
+        self.createFile('telefonos.csv', ['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])
         self.telefonos = self.extractFile('telefonos.csv')
 
-    def crear_archivo_no_existe(self, archivo, filas_iniciales): # ESTA EN FUNCIONES AUXILIARES
+    def createFile(self, archivo, filas_iniciales): 
         try:
             with open(archivo, 'x', encoding='utf-8', newline='') as arch:
                 escritor = csv.writer(arch)
@@ -169,7 +169,7 @@ class FabricaDeTelefonos:
         except FileExistsError:
             return
   
-    def extractFile(self, archivo_csv): # ESTA EN FUNCIONES AUXILIARES
+    def extractFile(self, archivo_csv): 
         telefonos = dict()
         try:
             with open(archivo_csv, mode='r', newline='', encoding='utf-8') as archivo:
@@ -237,7 +237,7 @@ class FabricaDeTelefonos:
         else:
             print('No hay telefonos creados ')
     
-    def updateFiles(self): # ESTA EN FUNCIONES AUXILIARES
+    def updateFiles(self): 
         with open('telefonos.csv', 'w', encoding='utf-8', newline='') as archivo:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
