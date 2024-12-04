@@ -4,9 +4,9 @@ from Parametros import ConfigParameters
 # from TP_EDP import Telefono
 
 class AppStore (Aplicacion):
-    def __init__(self, peso):
-        super().__init__(peso)
-        self.listaAppsDisponibles = self.getApps()
+    def __init__(self, weight):
+        super().__init__(weight)
+        self.availableAppsList = self.getApps()
     
     
     def getApps(self):
@@ -42,12 +42,12 @@ class AppStore (Aplicacion):
         except FileNotFoundError:
             print ('El archivo no existe')
   
-    def installApp (self, tel : ConfigParameters, telAppList : dict, nombre):
+    def installApp (self, tel : ConfigParameters, telAppList : dict, name):
         """
         Instala la aplicacion dado el nombre
         Args:
             tel: Instancia de ConfigParameters del telefono
-            nombre: Nombre de la aplicación
+            : Nombre de la aplicación
             telAppList: Diccionario del telefono donde instalar la app
         Notes:
             Cuidado con las instancias que se pasan, asi se evita
@@ -60,36 +60,36 @@ class AppStore (Aplicacion):
             print("No hay conexion a internet")
             return None
         
-        if nombre in telAppList.keys():      #Evita que se instale una aplicacion ya instalada
+        if name in telAppList.keys():      #Evita que se instale una aplicacion ya instalada
             print("Aplicacion ya instalada")
             return None
             
-        elif nombre in self.listaAppsDisponibles[0]:
+        elif name in self.availableAppsList[0]:
             
             i = 0
-            while self.listaAppsDisponibles[0][i] != nombre:
+            while self.availableAppsList[0][i] != name:
                 i += 1
-            peso = self.listaAppsDisponibles[1][i]
-            version = self.listaAppsDisponibles[2][i]
-            if tel.almacenamiento < peso:
+            weight = self.availableAppsList[1][i]
+            version = self.availableAppsList[2][i]
+            if tel.almacenamiento < weight:
                 print('Espacio insuficiente')
                 return None          
             if not self.compareVersions(tel.version, version):
                 print ('Posee un OS mas antiguo que el minimo')
                 return None
-            telAppList.update({nombre : Aplicacion(peso)})
-            tel.almacenamiento -= peso 
+            telAppList.update({name : Aplicacion(weight)})
+            tel.almacenamiento -= weight 
         else:
             print("No existe esa aplicacion en la tienda")
 
         
-    def uninstallApp (self, tel : ConfigParameters,telAppList : dict ,nombre):
+    def uninstallApp (self, tel : ConfigParameters,telAppList : dict ,name):
         
         if isinstance(tel, ConfigParameters):
-            if nombre in telAppList.keys():
-                app : Aplicacion = telAppList.get(nombre)
-                tel.almacenamiento += app.peso
-                telAppList.pop(nombre)
+            if name in telAppList.keys():
+                app : Aplicacion = telAppList.get(name)
+                tel.almacenamiento += app.weight
+                telAppList.pop(name)
             else:
                 print("Aplicacion no instalada")
         else:

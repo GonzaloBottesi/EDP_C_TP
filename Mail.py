@@ -5,8 +5,8 @@ from datetime import datetime
 
 class Mail(Aplicacion):
     
-    def __init__(self, peso):
-        super().__init__(peso)
+    def __init__(self, weight):
+        super().__init__(weight)
         crear_archivo_no_existe('mails.csv',['ID','DE','PARA','FECHA','MENSAJE','LECTURA'])
         self.mails=self.extractFile('mails.csv')
      

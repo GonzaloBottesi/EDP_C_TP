@@ -1,8 +1,8 @@
 from Aplicacion import Aplicacion
 
 class Contactos(Aplicacion):
-    def __init__(self, peso):
-        super().__init__(peso)
+    def __init__(self, weight):
+        super().__init__(weight)
         self.contactList = dict()
         
     

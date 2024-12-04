@@ -5,8 +5,8 @@ from Stack import Stack
 
 ## Modelo de paquete a enviar: ['LLAMADA', Emisor , Receptor, datetime , pedido]. R = REQUEST ; B = BUSY ; N = NOT FOUND ; K = OK ; S = STOP ; F = RECHAZADO
 class Llamadas(Aplicacion):
-    def __init__(self, peso) -> None:
-        super().__init__(peso)
+    def __init__(self, weight) -> None:
+        super().__init__(weight)
         self.callHistory = Stack()
         
     def sendCallRequest (self, tel1 : str):

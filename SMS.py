@@ -3,8 +3,8 @@ import datetime
 from Paquete import PaqueteSMS
 
 class SMS (Aplicacion):
-    def __init__(self, peso) -> None:
-        super().__init__(peso)
+    def __init__(self, weight) -> None:
+        super().__init__(weight)
         self.inbox = dict()
         
     def sendMessage(self, telNumber : str):

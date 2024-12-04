@@ -15,8 +15,8 @@ import Paquete as pkt
 #crear_archivo_no_existe('telefonos.csv',['ID','NOMBRE','MODELO','OS','VERSION','RAM','ALMACENAMIENTO','NUMERO']) #crearlo las veces que sea neceario (es decir las veces que se usan archivos)
 
 central = Central()
-lista_telefonos = dict()
-fabrica_de_telefonos = FabricaDeTelefonos()
+phoneList = dict()
+phoneFactory = FabricaDeTelefonos()
 # no se si falta alguna ams
 
 
@@ -61,17 +61,17 @@ def phoneCentralMenu():
     while not salir:
         match input('¿Qué quiere hacer en la Central?\n1. Registrar un telefono\n2. Dar de baja un telefono\n3. Salir\n '):
             case '1':
-                showPhoneList(fabrica_de_telefonos.telefonos)
+                showPhoneList(phoneFactory.telefonos)
                 key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
-                while key not in fabrica_de_telefonos.telefonos:
+                while key not in phoneFactory.telefonos:
                     key = input('Por favor, ingrese un numero valido: ')
-                central.registerDevice(fabrica_de_telefonos.telefonos[key])
+                central.registerDevice(phoneFactory.telefonos[key])
             case '2':
-                showPhoneList(fabrica_de_telefonos.telefonos)
+                showPhoneList(phoneFactory.telefonos)
                 key = input('Seleccione el telefono a registrar introduciendo el numero de la lista: ')
-                while key not in fabrica_de_telefonos.telefonos:
+                while key not in phoneFactory.telefonos:
                     key = input('Por favor, ingrese un numero valido: ')
-                central.eraseDevice(fabrica_de_telefonos.telefonos[key])
+                central.eraseDevice(phoneFactory.telefonos[key])
             case '3':
                 salir = True
             case other:
@@ -83,18 +83,18 @@ def phoneFactoryMenu():
     while not salir:
         match input('¿Qué quiere hacer con los teléfonos?\n1. Crear Teléfono\n2. Eliminar Teléfono\n3. Elegir qué teléfono usar\n4. Salir '):
             case '1':
-                newPhoneEntry = fabrica_de_telefonos.createPhone()  # Volver al menú
-                lista_telefonos.update(newPhoneEntry)
+                newPhoneEntry = phoneFactory.createPhone()  # Volver al menú
+                phoneList.update(newPhoneEntry)
                 #phoneFactoryMenu()
             case '2':
-                key = fabrica_de_telefonos.erasePhone() # Volver al menú
+                key = phoneFactory.erasePhone() # Volver al menú
                 if key is not False:
-                    lista_telefonos.pop(key)
+                    phoneList.pop(key)
                 #phoneFactoryMenu()
             case '3':
-                telefono = fabrica_de_telefonos.choosePhone()
+                telefono = phoneFactory.choosePhone()
                 if isinstance(telefono, Telefono):
-                    lista_telefonos.update({telefono.id : telefono})
+                    phoneList.update({telefono.id : telefono})
                     telefono.powerButton() # Al entrar al menu se prende solo el celular
                     print('Telefono encendido')
                     phoneMenu(telefono)  # Llamar al método de menú del teléfono elegido # Vte lleva al telefono
@@ -104,7 +104,7 @@ def phoneFactoryMenu():
             case '4':
                 salir = True
                 print('Salir')
-                fabrica_de_telefonos.updateFiles()
+                phoneFactory.updateFiles()
                 #menu1()
             case other:
                 print('Esta opción no está disponible en este momento')
