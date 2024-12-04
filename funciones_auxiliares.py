@@ -36,7 +36,7 @@ def updateFiles(self):
         escritor = csv.writer(archivo)
         escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
         for telefono in self.telefonos.values():
-            escritor.writerow([telefono.id, telefono.nombre, telefono.modelo, telefono.os,
+            escritor.writerow([telefono.id, telefono.configParameters.nombre, telefono.model, telefono.os,
                                 telefono.version, telefono.ram, telefono.almacenamiento, telefono.numero])
 
 class Nodo:

@@ -28,6 +28,11 @@ class Llamadas(Aplicacion):
             print('Error en paquete, no se puede procesar')
             return False
         
+        if not self.callHistory.empty():
+            if self.callHistory.topValue.value[1] == 'En curso':
+                print('Ya tiene una llamada en curso')
+                return None
+        
         if packet.intention == Intentions.BUSY:
             header = packet.receiver + '-' + packet.datetime
             self.callHistory.push(( header , 'Ocupado'))

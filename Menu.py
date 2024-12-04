@@ -190,6 +190,7 @@ def callMenu(telefono : Telefono):
                 paquete_llamada = telefono.currentApp.sendCallRequest(telefono.numero)
                 print(paquete_llamada)
             case '2':
+                samplePacket.intention = pkt.Intentions.REQUEST
                 paquete_recepcion = telefono.currentApp.receivePacket(samplePacket) #Pensar en un paquete de ejemplo
                 print(paquete_recepcion)
             case '3':
@@ -291,7 +292,7 @@ def configMenu(telefono: Telefono):
     salir = False
     while not salir:
         if isinstance(telefono.currentApp, Config):
-            match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar nombre de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar/Desactivar red\n4. Activar/Desactivar datos\n5. Salir\n'):
+            match input('¿Qué quiere hacer con la configuracion?\n1. Cambiar  de telefono\n2. Cambiar codigo de desbloqueo\n3. Activar/Desactivar red\n4. Activar/Desactivar datos\n5. Salir\n'):
                 case '1':
                     telefono.currentApp.setName(telefono.configParameters)
                     #configMenu(telefono)

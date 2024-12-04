@@ -10,7 +10,7 @@ from SMS import SMS
 
 class Telefono:
     
-    def __init__(self, id, nombre, modelo, os, version, ram, almacenamiento: int, numero) -> None:
+    def __init__(self, id, name, model, os, version, ram, almacenamiento: int, numero) -> None:
         
         self.listaApps = dict()
         self.listaApps.update({"AppStore" : AppStore('0 K'), 
@@ -20,12 +20,11 @@ class Telefono:
                                "SMS" : SMS('0 K') , 
                                "Contactos" : Contactos('0 K')})
         self.id = id
-        self.nombre = nombre
-        self.modelo = modelo
+        self.model = model
         self.os = os
         self.ram = ram
 
-        self.configParameters = ConfigParameters(nombre, password = '', datos = False, red = True, 
+        self.configParameters = ConfigParameters(name, password = '', datos = False, red = True, 
                                            almacenamiento = self.tamanio_a_bytes(almacenamiento), version = version)
         
         self.numero = numero    
@@ -100,10 +99,10 @@ class Telefono:
             print(f'{i}. {app}')
             i += 1
             
-        selectedApp = input('Escriba el nombre de la aplicacion')
+        selectedApp = input('Escriba el nombre de la aplicacion: ')
         
         while selectedApp not in nameList:
-            selectedApp = input('Error, por favor escriba el nombre tal como aparece en pantalla')
+            selectedApp = input('Error, por favor escriba el nombre tal como aparece en pantalla: ')
             
         
         self.currentApp = self.listaApps.get(selectedApp)
@@ -151,7 +150,7 @@ class Telefono:
         return int(float(tamanio_formateado))
 
     def __str__(self) -> str:
-        string = f'{self.modelo} de {self.nombre}; Num: {self.numero}'
+        string = f'{self.model} de {self.configParameters.name}; Num: {self.numero}'
         return string
     
     
@@ -192,8 +191,8 @@ class FabricaDeTelefonos:
         id = input('Ingrese el ID de su teléfono: ')
         while id in self.telefonos or not id.isdigit():
             id = input('Error en la introducción del ID\nIngrese el ID de su teléfono:')
-        nombre = input('Ingrese el nombre de su teléfono: ')
-        modelo = input('Ingrese el modelo de su teléfono: ')
+        name = input('Ingrese el nombre de su teléfono: ')
+        model = input('Ingrese el modelo de su teléfono: ')
         os = input('Ingrese el sistema operativo: ')
         version = input ('Ingrese la version (EJ. 4.0.0): ')
         ram = input('Ingrese la RAM (EJ. 16G): ')
@@ -203,7 +202,7 @@ class FabricaDeTelefonos:
             numero = input('ERROR, por favor ingrese un numero valido')
         #while not almacenamiento.isdigit():
          #   almacenamiento = input('Error en el ingreso del almacenamiento.\nIngrese el tamaño de almacenamiento:')
-        telefono = Telefono(id, nombre, modelo, os, version, ram, almacenamiento, numero)  # Asigna None o un valor a `numero`
+        telefono = Telefono(id, name, model, os, version, ram, almacenamiento, numero)  # Asigna None o un valor a `numero`
         self.telefonos[id] = telefono
         return {telefono.id : telefono}
         
@@ -242,7 +241,7 @@ class FabricaDeTelefonos:
             escritor = csv.writer(archivo)
             escritor.writerow(['ID', 'NOMBRE', 'MODELO', 'OS', 'VERSION', 'RAM', 'ALMACENAMIENTO', 'NUMERO'])  # Escribir encabezados
             for telefono in self.telefonos.values():
-                escritor.writerow([telefono.id, telefono.configParameters.name, telefono.modelo, telefono.os,
+                escritor.writerow([telefono.id, telefono.configParameters.name, telefono.model, telefono.os,
                                    telefono.configParameters.version, telefono.ram, telefono.configParameters.almacenamiento, telefono.numero])
     
 

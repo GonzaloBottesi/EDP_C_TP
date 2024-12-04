@@ -42,7 +42,7 @@ class Config(Aplicacion):
         
         if tel.pin == password:
             newname = input ("Ingrese nombre nuevo: ")
-            tel.nombre = newname
+            tel.name = newname
             return True
         else:
             print("Contraseña incorrecta")

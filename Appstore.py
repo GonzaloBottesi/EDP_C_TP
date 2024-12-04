@@ -47,7 +47,7 @@ class AppStore (Aplicacion):
         Instala la aplicacion dado el nombre
         Args:
             tel: Instancia de ConfigParameters del telefono
-            : Nombre de la aplicación
+            name : Nombre de la aplicación
             telAppList: Diccionario del telefono donde instalar la app
         Notes:
             Cuidado con las instancias que se pasan, asi se evita

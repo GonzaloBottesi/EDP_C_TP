@@ -31,11 +31,12 @@ class Stack:
     
     def __str__(self) -> str:
         i = self.topValue
-        print (i.value)
-        while i.next != None:
-            i = i.next
-            print(i.value)
-            
+        if not self.empty() :
+            print (i.value)
+            while i.next is not None:
+                i = i.next
+                print(i.value)
+                
         return 'Fin'
             
 
