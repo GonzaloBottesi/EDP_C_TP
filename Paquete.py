@@ -4,9 +4,9 @@ class Intentions(Enum):
     REQUEST = 0
     BUSY = 1
     NOT_FOUND = 2
-    OK = 4
-    STOP = 5
-    REJECTED = 6
+    OK = 3
+    STOP = 4
+    REJECTED = 5
 
 class Paquete:
     def __init__(self, sender, receiver, datetime) -> None:
